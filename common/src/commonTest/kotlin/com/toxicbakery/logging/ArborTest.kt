@@ -26,6 +26,14 @@ class ArborTest {
     }
 
     @Test
+    fun testTag() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.tag("tag").d("test")
+        assertEquals("${Arbor.DEBUG} tag test", seedling.log)
+    }
+
+    @Test
     fun testD() {
         val seedling = TestSeedling()
         Arbor.sow(seedling)

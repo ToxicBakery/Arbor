@@ -8,8 +8,13 @@ class Arbor private constructor(seedlings: Set<ISeedling> = setOf()) {
     val forest: Set<ISeedling>
         get() = seedlings.toSet()
 
-    fun sow(seedling: ISeedling) = seedlings.add(seedling)
-    fun harvest(seedling: ISeedling) = seedlings.remove(seedling)
+    fun sow(seedling: ISeedling) {
+        seedlings.add(seedling)
+    }
+
+    fun harvest(seedling: ISeedling) {
+        seedlings.remove(seedling)
+    }
 
     fun d(msg: String) = seedlings.forEach { seedling -> seedling.log(DEBUG, seedling.tag, msg) }
     fun d(throwable: Throwable, msg: String) =
@@ -45,7 +50,8 @@ class Arbor private constructor(seedlings: Set<ISeedling> = setOf()) {
 
         private val perennial = Arbor()
 
-        val forest: Set<ISeedling> = perennial.forest
+        val forest: Set<ISeedling>
+            get() = perennial.forest
 
         fun tag(tag: String) = perennial.seedlings
             .map { TaggedSeedling(tag, it) }

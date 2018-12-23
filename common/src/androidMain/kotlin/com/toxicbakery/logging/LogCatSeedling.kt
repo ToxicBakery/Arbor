@@ -10,7 +10,11 @@ class LogCatSeedling : ISeedling {
             .stackTrace
             .let { trace ->
                 // Calling from Java has an extra class in the stack trace (Arbor) resulting in the wrong class name
-                val stackIndex = CALL_STACK_INDEX + if (trace[3].className == Arbor::class.java.name) 1 else 0
+                val stackIndex = when {
+                    trace[0].className == LogCatSeedling::class.java.name -> CALL_STACK_INDEX_DIRECT_CALLER
+                    trace[3].className == Arbor::class.java.name -> CALL_STACK_INDEX_JAVA_CALLER
+                    else -> CALL_STACK_INDEX_KOTLIN_CALLER
+                }
                 if (trace.size <= stackIndex) throw IllegalStateException(INVALID_STACK)
                 else trace[stackIndex].className
                     .split('.')
@@ -32,7 +36,9 @@ class LogCatSeedling : ISeedling {
     }
 
     companion object {
-        private const val CALL_STACK_INDEX = 3
+        private const val CALL_STACK_INDEX_DIRECT_CALLER = 1
+        private const val CALL_STACK_INDEX_KOTLIN_CALLER = 3
+        private const val CALL_STACK_INDEX_JAVA_CALLER = 4
         private const val INVALID_STACK = "Synthetic stacktrace didn't have enough elements: are you using proguard?"
         private const val MAX_ANDROID_TAG = 23
         private val IS_AT_LEAST_N: Boolean

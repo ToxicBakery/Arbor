@@ -1,5 +1,6 @@
 buildscript {
     ext.kotlin_version = '1.3.11'
+    ext.dokka_version = '0.9.17'
     repositories {
         google()
         mavenCentral()
@@ -13,6 +14,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
         classpath "com.github.salomonbrys.gradle.kotlin.js:kotlin-js-gradle-utils:1.0.0"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
 }
 

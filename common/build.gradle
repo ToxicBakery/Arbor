@@ -5,6 +5,7 @@ plugins {
     id 'com.github.salomonbrys.gradle.kotlin.js.mpp-tests.node'
 //    id 'maven'
     id 'signing'
+    id 'org.jetbrains.dokka'
 }
 
 archivesBaseName = 'arbor'
@@ -94,6 +95,62 @@ kotlin {
     }
 }
 
+task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Android", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/android"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
+        platforms = ["Android"]
+    }
+}
+
+task dokkaCommon(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/common"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+}
+
+task dokkaJs(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["JS", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/js"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+        platforms = ["JS"]
+    }
+}
+
+task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["JVM", "Common"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/jvm"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+        platforms = ["JVM"]
+    }
+}
+
 task emptySourcesJar(type: Jar) {
     classifier = 'sources'
 }
@@ -101,10 +158,28 @@ task emptyJavadocJar(type: Jar) {
     classifier = 'javadoc'
 }
 
+task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaAndroid) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc/android"
+}
+
+task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc/common"
+}
+
+task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc/js"
+}
+
+task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc/jvm"
+}
+
 publishing {
     publications.all {
-        artifact emptyJavadocJar
-
         pom.withXml {
             def root = asNode()
 
@@ -139,10 +214,33 @@ publishing {
         }
     }
 
-    afterEvaluate {
+    afterEvaluate { project ->
+        if (project.getPlugins().hasPlugin('com.android.library')) {
+            task androidSourcesJar(type: Jar) {
+                classifier = 'sources'
+                // Android source are missing the common sources so they need to be mashed together
+                from kotlin.sourceSets.androidMain.kotlin.srcDirs.plus(kotlin.sourceSets.commonMain.kotlin.srcDirs)
+            }
+        }
+
+        publications.getByName('android') {
+            artifacts.clear()
+            artifact("$buildDir/outputs/aar/arbor-release.aar")
+            artifact dokkaJavadocAndroidJar
+            artifact androidSourcesJar
+        }
+        publications.getByName('js') {
+            artifact dokkaJavadocJsJar
+        }
+        publications.getByName('jvm') {
+            artifact dokkaJavadocJvmJar
+        }
         publications.getByName('kotlinMultiplatform') {
-            // Source jars are only created for platforms, not the common artifact.
+            artifact dokkaJavadocCommonJar
             artifact emptySourcesJar
+        }
+        publications.getByName('metadata') {
+            artifact dokkaJavadocCommonJar
         }
     }
 
@@ -168,3 +266,6 @@ signing {
     required false
     sign publishing.publications
 }
+
+publish.dependsOn assemble
+publishToMavenLocal.dependsOn assemble

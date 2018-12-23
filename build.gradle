@@ -16,9 +16,13 @@ buildscript {
     }
 }
 
-allprojects {
-    group 'com.toxicbakery.logging'
-    version '1.0-SNAPSHOT'
+subprojects {
+    String tagName = System.getenv('CIRCLE_TAG')
+    boolean isTag = tagName != null && !tagName.isEmpty()
+    String buildNumber = System.getenv('CIRCLE_BUILD_NUM') ?: "0"
+
+    group 'com.ToxicBakery.logging'
+    version "1.$buildNumber" + (isTag ? "" : "-SNAPSHOT")
 
     repositories {
         google()

@@ -16,14 +16,14 @@ jobs:
           command: |
             echo "org.gradle.parallel=false" >> gradle.properties
             echo "kotlin.incremental=false" >> gradle.properties
-            bash <(curl -s https://codecov.io/bash)
             if [ "master" = "$CIRCLE_BRANCH" ] || [ ! -z "$CIRCLE_TAG" ]; then
               echo "signing.keyId=${SIGNING_KEY}" >> "gradle.properties"
               echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
               echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
               gpg --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY maven.keystore.gpg
-              ./gradlew uploadArchives --no-daemon -PdisablePreDex
+              ./gradlew build publish --no-daemon
             fi
+            bash <(curl -s https://codecov.io/bash)
 workflows:
   version: 2
   build:

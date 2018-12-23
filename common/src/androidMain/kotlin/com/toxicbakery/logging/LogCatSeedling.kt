@@ -1,40 +1,42 @@
 package com.toxicbakery.logging
 
+import android.os.Build
 import android.util.Log
-import java.io.PrintWriter
-import java.io.StringWriter
 
 class LogCatSeedling : ISeedling {
 
-    override val tag: String?
-        get() = Exception().stackTrace
+    override val tag: String
+        get() = Exception()
+            .stackTrace
             .let { trace ->
-                if (trace.size <= CALL_STACK_INDEX) throw IllegalStateException(INVALID_STACK)
-                else trace[CALL_STACK_INDEX].className
+                // Calling from Java has an extra class in the stack trace (Arbor) resulting in the wrong class name
+                val stackIndex = CALL_STACK_INDEX + if (trace[3].className == Arbor::class.java.name) 1 else 0
+                if (trace.size <= stackIndex) throw IllegalStateException(INVALID_STACK)
+                else trace[stackIndex].className
                     .split('.')
                     .last()
             }
 
     override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) {
+        if (tag == null) throw NullPointerException("Tag must not be null")
+        val tt = if (tag.length < MAX_ANDROID_TAG || IS_AT_LEAST_N) tag else tag.substring(0, MAX_ANDROID_TAG)
         when (level) {
-            Arbor.DEBUG -> throwable?.let { Log.d(tag, msg, it) } ?: Log.d(tag, msg)
-            Arbor.ERROR -> throwable?.let { Log.e(tag, msg, it) } ?: Log.e(tag, msg)
-            Arbor.INFO -> throwable?.let { Log.i(tag, msg, it) } ?: Log.i(tag, msg)
-            Arbor.VERBOSE -> throwable?.let { Log.v(tag, msg, it) } ?: Log.v(tag, msg)
-            Arbor.WARNING -> throwable?.let { Log.w(tag, msg, it) } ?: Log.w(tag, msg)
-            Arbor.WTF -> throwable?.let { Log.wtf(tag, msg, it) } ?: Log.wtf(tag, msg)
+            Arbor.DEBUG -> throwable?.let { Log.d(tt, msg, it) } ?: Log.d(tt, msg)
+            Arbor.ERROR -> throwable?.let { Log.e(tt, msg, it) } ?: Log.e(tt, msg)
+            Arbor.INFO -> throwable?.let { Log.i(tt, msg, it) } ?: Log.i(tt, msg)
+            Arbor.VERBOSE -> throwable?.let { Log.v(tt, msg, it) } ?: Log.v(tt, msg)
+            Arbor.WARNING -> throwable?.let { Log.w(tt, msg, it) } ?: Log.w(tt, msg)
+            Arbor.WTF -> throwable?.let { Log.wtf(tt, msg, it) } ?: Log.wtf(tt, msg)
             else -> throw Exception("Unsupported log level $level")
         }
     }
 
     companion object {
-        private const val CALL_STACK_INDEX = 1
+        private const val CALL_STACK_INDEX = 3
         private const val INVALID_STACK = "Synthetic stacktrace didn't have enough elements: are you using proguard?"
+        private const val MAX_ANDROID_TAG = 23
+        private val IS_AT_LEAST_N: Boolean
+            get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     }
 
 }
-
-private val Throwable?.traceToString: String
-    get() = StringWriter()
-        .use { stringWriter -> this?.printStackTrace(PrintWriter(stringWriter)) }
-        .toString()

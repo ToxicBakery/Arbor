@@ -11,9 +11,9 @@ class LogCatSeedling : ISeedling {
             .let { trace ->
                 // Calling from Java has an extra class in the stack trace (Arbor) resulting in the wrong class name
                 val stackIndex = when {
-                    trace[0].className == LogCatSeedling::class.java.name -> CALL_STACK_INDEX_DIRECT_CALLER
                     trace[3].className == Arbor::class.java.name -> CALL_STACK_INDEX_JAVA_CALLER
-                    else -> CALL_STACK_INDEX_KOTLIN_CALLER
+                    trace[2].className == Arbor.Companion::class.java.name -> CALL_STACK_INDEX_KOTLIN_CALLER
+                    else -> CALL_STACK_INDEX_DIRECT_CALLER
                 }
                 if (trace.size <= stackIndex) throw IllegalStateException(INVALID_STACK)
                 else trace[stackIndex].className

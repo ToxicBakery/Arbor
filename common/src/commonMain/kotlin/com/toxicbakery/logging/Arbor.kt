@@ -8,6 +8,11 @@ class Arbor private constructor(seedlings: Set<ISeedling> = setOf()) {
     val forest: Set<ISeedling>
         get() = seedlings.toSet()
 
+    fun tag(tag: String) = forest
+        .map { TaggedSeedling(tag, it) }
+        .toSet()
+        .let(::Arbor)
+
     fun sow(seedling: ISeedling) {
         seedlings.add(seedling)
     }
@@ -15,6 +20,8 @@ class Arbor private constructor(seedlings: Set<ISeedling> = setOf()) {
     fun harvest(seedling: ISeedling) {
         seedlings.remove(seedling)
     }
+
+    fun reset() = seedlings.clear()
 
     fun d(msg: String) = seedlings.forEach { seedling -> seedling.log(DEBUG, seedling.tag, msg) }
     fun d(throwable: Throwable, msg: String) =
@@ -53,14 +60,10 @@ class Arbor private constructor(seedlings: Set<ISeedling> = setOf()) {
         val forest: Set<ISeedling>
             get() = perennial.forest
 
-        fun tag(tag: String) = perennial.seedlings
-            .map { TaggedSeedling(tag, it) }
-            .toSet()
-            .let(::Arbor)
-
+        fun tag(tag: String) = perennial.tag(tag)
         fun sow(seedling: ISeedling) = perennial.sow(seedling)
         fun harvest(seedling: ISeedling) = perennial.harvest(seedling)
-        fun reset() = perennial.seedlings.clear()
+        fun reset() = perennial.reset()
 
         fun d(msg: String) = perennial.d(msg)
         fun d(throwable: Throwable, msg: String) = perennial.d(throwable, msg)

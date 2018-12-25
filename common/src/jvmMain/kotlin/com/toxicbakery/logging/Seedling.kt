@@ -12,7 +12,7 @@ class Seedling : ISeedling {
                 else trace[CALL_STACK_INDEX].className
             }
 
-    override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) =
+    override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?): Unit =
         (tag?.plus(": $msg") ?: msg)
             .plus(throwable.traceToString)
             .let { message ->

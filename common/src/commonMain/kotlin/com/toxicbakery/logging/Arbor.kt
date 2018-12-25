@@ -19,7 +19,7 @@ class Arbor {
             get() = perennial.forest
 
         @JvmStatic
-        fun tag(tag: String) = perennial.tag(tag)
+        fun tag(tag: String): Branch = perennial.tag(tag)
 
         @JvmStatic
         fun sow(seedling: ISeedling) = perennial.sow(seedling)

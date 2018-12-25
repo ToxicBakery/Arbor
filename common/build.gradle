@@ -146,7 +146,7 @@ task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
         platforms = ["Common"]
     }
     sourceRoot {
-        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+        path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
         platforms = ["JVM"]
     }
 }

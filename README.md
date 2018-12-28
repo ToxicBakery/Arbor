@@ -7,7 +7,7 @@ This library was built as a practical experiment with Kotlin Multiplatform and s
 ## API
 Arbor follows a very similar usage pattern to [Timber](https://github.com/jakewharton/timber). Key differences exist in feature support and terminology which was done purely because I had a thesaurus laying around.
 
-**Sow Your Seedling**
+##### Sow Your Seedling
 Seedlings are platform specific logging implementations such as using `Logcat` in Android and `println` in JavaScript.
 
 Android
@@ -27,7 +27,7 @@ Arbor.sow(Seedling())
 
 Custom seedlings can be created from the [com.toxicbakery.logging.ISeedling](https://github.com/ToxicBakery/Arbor/blob/master/common/src/commonMain/kotlin/com/toxicbakery/logging/ISeedling.kt) interface.
 
-**Logging**
+##### Logging
 All logging is triggered from the [Arbor](https://github.com/ToxicBakery/Arbor/blob/master/common/src/commonMain/kotlin/com/toxicbakery/logging/Arbor.kt) static methods which supports debug, info, verbose, warning, error, and wtf. Logging calls are passed to the underlying branch implementation and finally to the sown seedling instances. 
 
 ```kotlin

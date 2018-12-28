@@ -5,6 +5,7 @@ import android.util.Log
 
 class LogCatSeedling : ISeedling {
 
+    @Suppress("MagicNumber")
     override val tag: String
         get() = Exception()
             .stackTrace
@@ -15,7 +16,7 @@ class LogCatSeedling : ISeedling {
                     trace[2].className == Arbor.Companion::class.java.name -> CALL_STACK_INDEX_KOTLIN_CALLER
                     else -> CALL_STACK_INDEX_DIRECT_CALLER
                 }
-                if (trace.size <= stackIndex) throw IllegalStateException(INVALID_STACK)
+                if (trace.size <= stackIndex) throw LoggingException(INVALID_STACK)
                 else trace[stackIndex].className
                     .split('.')
                     .last()
@@ -24,16 +25,20 @@ class LogCatSeedling : ISeedling {
     override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) {
         if (tag == null) throw NullPointerException("Tag must not be null")
         val tt = if (tag.length < MAX_ANDROID_TAG || IS_AT_LEAST_N) tag else tag.substring(0, MAX_ANDROID_TAG)
-        when (level) {
-            Arbor.DEBUG -> throwable?.let { Log.d(tt, msg, it) } ?: Log.d(tt, msg)
-            Arbor.ERROR -> throwable?.let { Log.e(tt, msg, it) } ?: Log.e(tt, msg)
-            Arbor.INFO -> throwable?.let { Log.i(tt, msg, it) } ?: Log.i(tt, msg)
-            Arbor.VERBOSE -> throwable?.let { Log.v(tt, msg, it) } ?: Log.v(tt, msg)
-            Arbor.WARNING -> throwable?.let { Log.w(tt, msg, it) } ?: Log.w(tt, msg)
-            Arbor.WTF -> throwable?.let { Log.wtf(tt, msg, it) } ?: Log.wtf(tt, msg)
-            else -> throw Exception("Unsupported log level $level")
-        }
+        writeLog(level, tt, msg, throwable)
     }
+
+    @Suppress("ComplexMethod")
+    private fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) =
+        when (level) {
+            Arbor.DEBUG -> throwable?.let { Log.d(tag, msg, it) } ?: Log.d(tag, msg)
+            Arbor.ERROR -> throwable?.let { Log.e(tag, msg, it) } ?: Log.e(tag, msg)
+            Arbor.INFO -> throwable?.let { Log.i(tag, msg, it) } ?: Log.i(tag, msg)
+            Arbor.VERBOSE -> throwable?.let { Log.v(tag, msg, it) } ?: Log.v(tag, msg)
+            Arbor.WARNING -> throwable?.let { Log.w(tag, msg, it) } ?: Log.w(tag, msg)
+            Arbor.WTF -> throwable?.let { Log.wtf(tag, msg, it) } ?: Log.wtf(tag, msg)
+            else -> throw LoggingException("Unsupported log level $level")
+        }
 
     companion object {
         private const val CALL_STACK_INDEX_DIRECT_CALLER = 1

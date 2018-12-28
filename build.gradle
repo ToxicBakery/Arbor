@@ -36,4 +36,10 @@ subprojects {
         maven { url "https://dl.bintray.com/salomonbrys/gradle-plugins" }
     }
 
+    afterEvaluate {
+        afterEvaluate {
+            check.dependsOn('detekt')
+        }
+    }
+
 }

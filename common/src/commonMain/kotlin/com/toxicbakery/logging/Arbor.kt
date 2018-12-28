@@ -2,6 +2,7 @@ package com.toxicbakery.logging
 
 import kotlin.jvm.JvmStatic
 
+@Suppress("TooManyFunctions")
 class Arbor {
 
     companion object {

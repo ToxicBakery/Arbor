@@ -6,6 +6,7 @@ plugins {
 //    id 'maven'
     id 'signing'
     id 'org.jetbrains.dokka'
+    id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
 }
 
 archivesBaseName = 'arbor'
@@ -93,6 +94,18 @@ kotlin {
             }
         }
     }
+}
+
+detekt {
+    input = files(
+            "src/androidMain/kotlin",
+            "src/commonMain/kotlin",
+            "src/jsMain/kotlin",
+            "src/jvmMain/kotlin",
+    )
+    filters = ".*/resources/.*,.*/build/.*"
+    config = files("detekt.yml")
+    reports.xml.enabled = false
 }
 
 task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {

@@ -1,26 +1,27 @@
 package com.toxicbakery.logging
 
+@Suppress("TooManyFunctions")
 class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
 
     private val seedlings: MutableSet<ISeedling> = seedlings.toMutableSet()
 
-    val forest: Set<ISeedling>
+    internal val forest: Set<ISeedling>
         get() = seedlings.toSet()
 
-    fun tag(tag: String) = forest
+    internal fun tag(tag: String) = forest
         .map { TaggedSeedling(tag, it) }
         .toSet()
         .let(::Branch)
 
-    fun sow(seedling: ISeedling) {
+    internal fun sow(seedling: ISeedling) {
         seedlings.add(seedling)
     }
 
-    fun harvest(seedling: ISeedling) {
+    internal fun harvest(seedling: ISeedling) {
         seedlings.remove(seedling)
     }
 
-    fun reset() = seedlings.clear()
+    internal fun reset() = seedlings.clear()
 
     fun d(msg: String) = seedlings.forEach { seedling -> seedling.log(Arbor.DEBUG, seedling.tag, msg) }
     fun d(throwable: Throwable, msg: String) =

@@ -31,10 +31,9 @@ jobs:
                 git config --global user.name $GH_NAME
                 cd common/gh-pages
                 git init 
-                git remote add origin $CIRCLE_REPOSITORY_URL
                 git checkout --orphan gh-pages
                 git commit -m "Automated deployment of ${CIRCLE_BRANCH} ${CIRCLE_SHA1}" --allow-empty
-                git push origin gh-pages --force
+                git push -q https://${GH_PERSONAL_TOKEN}@github.com/ToxicBakery/${CIRCLE_PROJECT_REPONAME}.git gh-pages --force
               fi
             else
               ./gradlew build --no-daemon

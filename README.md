@@ -1,4 +1,4 @@
-# Arbor [![CircleCI](https://circleci.com/gh/ToxicBakery/Arbor.svg?style=svg)](https://circleci.com/gh/ToxicBakery/Arbor)
+# Arbor [![CircleCI](https://circleci.com/gh/ToxicBakery/Arbor.svg?style=svg)](https://circleci.com/gh/ToxicBakery/Arbor) [![Maven Central](https://img.shields.io/maven-central/v/com.ToxicBakery.logging/common.svg)](https://oss.sonatype.org/content/repositories/releases/com/ToxicBakery/logging/)
 Timber like logging implementation for Kotlin Multiplatform.
 
 ## Purpose

@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: toxicbakery/alpine-glibc-android:release-1.3.3
+    - image: toxicbakery/alpine-glibc-android:release-2.0
   environment:
     TERM: dumb
 
@@ -32,6 +32,7 @@ jobs:
                 cd common/gh-pages
                 git init 
                 git checkout --orphan gh-pages
+                git add -A
                 git commit -m "Automated deployment of ${CIRCLE_BRANCH} ${CIRCLE_SHA1}" --allow-empty
                 git push -q https://${GH_PERSONAL_TOKEN}@github.com/ToxicBakery/${CIRCLE_PROJECT_REPONAME}.git gh-pages --force
               fi

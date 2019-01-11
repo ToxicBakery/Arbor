@@ -108,6 +108,29 @@ detekt {
     reports.xml.enabled = false
 }
 
+task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Android", "Common", "JS", "JVM"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "${project.projectDir}/gh-pages"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
+        platforms = ["Android"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
+        platforms = ["JS"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
+        platforms = ["JVM"]
+    }
+}
+
 task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
     impliedPlatforms = ["Android", "Common"]
     kotlinTasks { [] }

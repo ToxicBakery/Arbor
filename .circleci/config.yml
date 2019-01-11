@@ -5,6 +5,10 @@ defaults: &defaults
   environment:
     TERM: dumb
 
+branches:
+  ignore:
+    - gh-pages
+
 version: 2
 jobs:
   build:
@@ -21,7 +25,17 @@ jobs:
               echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
               echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
               gpg --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY maven.keystore.gpg
-              ./gradlew build publish --no-daemon
+              ./gradlew build dokkaGhPages publish --no-daemon
+              if [ "master" = "$CIRCLE_BRANCH" ]; then
+                git config --global user.email $GH_EMAIL
+                git config --global user.name $GH_NAME
+                cd common/gh-pages
+                git init 
+                git remote add origin $CIRCLE_REPOSITORY_URL
+                git checkout --orphan gh-pages
+                git commit -m "Automated deployment of ${CIRCLE_BRANCH} ${CIRCLE_SHA1}" --allow-empty
+                git push origin gh-pages --force
+              fi
             else
               ./gradlew build --no-daemon
             fi
@@ -35,3 +49,7 @@ workflows:
           filters:
             tags:
               only: /.*/
+            branches:
+              ignore:
+                - gh-pages
+

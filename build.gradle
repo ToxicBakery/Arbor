@@ -10,7 +10,7 @@ buildscript {
         maven { url "https://dl.bintray.com/salomonbrys/gradle-plugins" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.37"
         classpath "com.github.salomonbrys.gradle.kotlin.js:kotlin-js-gradle-utils:1.0.0"

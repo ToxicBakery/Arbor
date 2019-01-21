@@ -52,7 +52,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                api "org.jetbrains.kotlin:kotlin-stdlib-common"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
             }
         }
         commonTest {
@@ -63,7 +63,7 @@ kotlin {
         }
         jsMain {
             dependencies {
-                api "org.jetbrains.kotlin:kotlin-stdlib-js"
+                implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
             }
         }
         jsTest {
@@ -73,7 +73,7 @@ kotlin {
         }
         jvmMain {
             dependencies {
-                api 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
             }
         }
         jvmTest {
@@ -84,7 +84,7 @@ kotlin {
         androidMain {
             dependsOn jvmMain
             dependencies {
-                api 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
             }
         }
         androidTest {

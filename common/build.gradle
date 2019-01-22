@@ -1,38 +1,19 @@
 plugins {
-    id 'com.android.library'
     id 'kotlin-multiplatform'
     id 'maven-publish'
     id 'com.github.salomonbrys.gradle.kotlin.js.mpp-tests.node'
-//    id 'maven'
     id 'signing'
     id 'org.jetbrains.dokka'
-    id("io.gitlab.arturbosch.detekt").version("1.0.0-RC12")
+    id 'io.gitlab.arturbosch.detekt'
 }
 
 archivesBaseName = 'arbor'
 
-android {
-    compileSdkVersion 28
-    defaultConfig {
-        minSdkVersion 15
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-        }
-    }
-    testOptions {
-        unitTests.returnDefaultValues = true
-    }
-}
+// workaround for https://youtrack.jetbrains.com/issue/KT-27170
+configurations.create("compileClasspath")
 
 kotlin {
     targets {
-        fromPreset(presets.android, 'android') {
-            mavenPublication {
-                artifactId = 'arbor-android'
-            }
-        }
         fromPreset(presets.jvm, 'jvm') {
             mavenPublication {
                 artifactId = 'arbor-jvm'
@@ -81,24 +62,11 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
             }
         }
-        androidMain {
-            dependsOn jvmMain
-            dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-            }
-        }
-        androidTest {
-            dependsOn jvmTest
-            dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-            }
-        }
     }
 }
 
 detekt {
     input = files(
-            "src/androidMain/kotlin",
             "src/commonMain/kotlin",
             "src/jsMain/kotlin",
             "src/jvmMain/kotlin",
@@ -109,7 +77,7 @@ detekt {
 }
 
 task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Android", "Common", "JS", "JVM"]
+    impliedPlatforms = ["Common", "JS", "JVM"]
     kotlinTasks { [] }
     outputFormat = 'html'
     outputDirectory = "${project.projectDir}/gh-pages"
@@ -118,7 +86,7 @@ task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
         platforms = ["Common"]
     }
     sourceRoot {
-        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
+        path = "common/android/src/androidMain/kotlin"
         platforms = ["Android"]
     }
     sourceRoot {
@@ -128,21 +96,6 @@ task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
     sourceRoot {
         path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
         platforms = ["JVM"]
-    }
-}
-
-task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Android", "Common"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/android"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
-    }
-    sourceRoot {
-        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
-        platforms = ["Android"]
     }
 }
 
@@ -194,11 +147,6 @@ task emptyJavadocJar(type: Jar) {
     classifier = 'javadoc'
 }
 
-task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaAndroid) {
-    classifier = 'javadoc'
-    from "$buildDir/javadoc/android"
-}
-
 task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
     classifier = 'javadoc'
     from "$buildDir/javadoc/common"
@@ -215,7 +163,7 @@ task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
 }
 
 publishing {
-    publications.all {
+    publications.all { pub ->
         pom.withXml {
             def root = asNode()
 
@@ -247,23 +195,36 @@ publishing {
                     }
                 }
             }
+
+            if (pub.artifactId == "arbor-android") {
+                def dependenciesNode = asNode().appendNode('dependencies')
+                appendDepNode(dependenciesNode, 'org.jetbrains.kotlin', 'kotlin-stdlib', kotlin_version, 'runtime')
+                appendDepNode(dependenciesNode, 'com.ToxicBakery.logging', 'arbor-jvm', version, 'runtime')
+            }
         }
     }
 
-    afterEvaluate { project ->
-        if (project.getPlugins().hasPlugin('com.android.library')) {
-            task androidSourcesJar(type: Jar) {
-                classifier = 'sources'
-                // Android source are missing the common sources so they need to be mashed together
-                from kotlin.sourceSets.androidMain.kotlin.srcDirs.plus(kotlin.sourceSets.commonMain.kotlin.srcDirs)
-            }
-        }
+    task dokkaJavadocAndroidJar(type: Jar, dependsOn: project("android").tasks.find { it.name == 'build' }) {
+        classifier = 'javadoc'
+        from "android/build/libs/android-$version-javadoc.jar"
+    }
 
-        publications.getByName('android') {
-            artifacts.clear()
-            artifact("$buildDir/outputs/aar/arbor-release.aar")
-            artifact dokkaJavadocAndroidJar
-            artifact androidSourcesJar
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from "android/build/libs/android-$version-sources.jar"
+    }
+
+    publish.dependsOn ':common:android:build'
+    publishToMavenLocal.dependsOn ':common:android:build'
+
+    afterEvaluate {
+        publications {
+            maven(MavenPublication) {
+                artifactId "arbor-android"
+                artifact 'android/build/outputs/aar/android-release.aar'
+                artifact dokkaJavadocAndroidJar
+                artifact androidSourcesJar
+            }
         }
         publications.getByName('js') {
             artifact dokkaJavadocJsJar
@@ -298,10 +259,19 @@ publishing {
     }
 }
 
+def appendDepNode(Node node, String groupId, String artifactId, String ver, String scope) {
+    def newNode = node.appendNode('dependency')
+    newNode.appendNode('groupId', groupId)
+    newNode.appendNode('artifactId', artifactId)
+    newNode.appendNode('version', ver)
+    newNode.appendNode('scope', scope)
+}
+
 signing {
     required false
     sign publishing.publications
 }
 
-publish.dependsOn assemble
-publishToMavenLocal.dependsOn assemble
+build.dependsOn ':common:android:assemble'
+publish.dependsOn build
+publishToMavenLocal.dependsOn build

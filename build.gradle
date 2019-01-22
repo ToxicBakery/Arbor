@@ -18,6 +18,10 @@ buildscript {
     }
 }
 
+plugins {
+    id "io.gitlab.arturbosch.detekt" version "1.0.0-RC12"
+}
+
 subprojects {
     String tagName = System.getenv('CIRCLE_TAG')
     boolean isTag = tagName != null && !tagName.isEmpty()

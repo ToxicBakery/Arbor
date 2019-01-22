@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-multiplatform'
+    id 'io.gitlab.arturbosch.detekt'
+    id 'org.jetbrains.dokka'
+}
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        minSdkVersion 15
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+}
+
+kotlin {
+    targets {
+        fromPreset(presets.android, 'android') {
+            mavenPublication {
+                artifactId = 'arbor-android'
+            }
+        }
+    }
+
+    sourceSets {
+        androidMain {
+            dependencies {
+                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation project(':common')
+            }
+        }
+        androidTest {
+            dependencies {
+                implementation project(':common')
+                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+            }
+        }
+    }
+}
+
+detekt {
+    input = files("src/androidMain/kotlin")
+    filters = ".*/resources/.*,.*/build/.*"
+    config = files("../detekt.yml")
+    reports.xml.enabled = false
+}
+
+task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    impliedPlatforms = ["Android"]
+    kotlinTasks { [] }
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/javadoc/android"
+    sourceRoot {
+        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
+        platforms = ["Common"]
+    }
+    sourceRoot {
+        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
+        platforms = ["Android"]
+    }
+}
+
+task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaAndroid) {
+    classifier = 'javadoc'
+    from "$buildDir/javadoc/android"
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from kotlin.sourceSets.androidMain.kotlin.srcDirs
+}
+
+build.dependsOn("dokkaJavadocAndroidJar")
+build.dependsOn("androidSourcesJar")

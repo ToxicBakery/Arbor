@@ -35,37 +35,37 @@ class Arbor {
         fun d(msg: String) = perennial.d(msg)
 
         @JvmStatic
-        fun d(throwable: Throwable, msg: String) = perennial.d(throwable, msg)
+        fun d(throwable: Throwable, msg: String = "") = perennial.d(throwable, msg)
 
         @JvmStatic
         fun v(msg: String) = perennial.v(msg)
 
         @JvmStatic
-        fun v(throwable: Throwable, msg: String) = perennial.v(throwable, msg)
+        fun v(throwable: Throwable, msg: String = "") = perennial.v(throwable, msg)
 
         @JvmStatic
         fun i(msg: String) = perennial.i(msg)
 
         @JvmStatic
-        fun i(throwable: Throwable, msg: String) = perennial.i(throwable, msg)
+        fun i(throwable: Throwable, msg: String = "") = perennial.i(throwable, msg)
 
         @JvmStatic
         fun w(msg: String) = perennial.w(msg)
 
         @JvmStatic
-        fun w(throwable: Throwable, msg: String) = perennial.w(throwable, msg)
+        fun w(throwable: Throwable, msg: String = "") = perennial.w(throwable, msg)
 
         @JvmStatic
         fun e(msg: String) = perennial.e(msg)
 
         @JvmStatic
-        fun e(throwable: Throwable, msg: String) = perennial.e(throwable, msg)
+        fun e(throwable: Throwable, msg: String = "") = perennial.e(throwable, msg)
 
         @JvmStatic
         fun wtf(msg: String) = perennial.wtf(msg)
 
         @JvmStatic
-        fun wtf(throwable: Throwable, msg: String) = perennial.wtf(throwable, msg)
+        fun wtf(throwable: Throwable, msg: String = "") = perennial.wtf(throwable, msg)
 
     }
 

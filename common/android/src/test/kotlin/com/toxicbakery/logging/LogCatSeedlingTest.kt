@@ -95,7 +95,7 @@ class LogCatSeedlingTest {
         assertEquals(
             listOf(
                 testString.substring(0, 4003),
-                testString.substring(4003)
+                testString.substring(4004)
             ),
             testString.logCatSplit().toList()
         )

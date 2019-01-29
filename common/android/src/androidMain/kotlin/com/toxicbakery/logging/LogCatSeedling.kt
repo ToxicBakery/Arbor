@@ -4,8 +4,17 @@ import android.os.Build
 import android.util.Log
 import com.toxicbakery.logging.Seedling.Companion.prettyPrint
 
+/**
+ * General purpose logging for Android applications with auto tagging and long log wrapping. Implementation avoids the
+ * log size hard limit of Android and uses and efficient right index lookup to attempt splits on existing new lines
+ * before forcing hard breaks. Tagging is automatically implemented by using an exception stack trace to determine
+ * the calling code.
+ */
 class LogCatSeedling : ISeedling {
 
+    /**
+     * Tag generation that uses an exception stacktrace to automatically determine the calling class.
+     */
     @Suppress("MagicNumber")
     override val tag: String
         get() = Exception()
@@ -23,6 +32,10 @@ class LogCatSeedling : ISeedling {
                     .last()
             }
 
+    /**
+     * Logging implementation that automatically splits on long lines and trims tags that will not fit the hard limit
+     * of older Android versions.
+     */
     override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
         val tt = if (IS_AT_LEAST_N || tag.length < MAX_ANDROID_TAG) tag else tag.substring(0, MAX_ANDROID_TAG)
         if (throwable == null) {
@@ -62,6 +75,9 @@ class LogCatSeedling : ISeedling {
         private val IS_AT_LEAST_N: Boolean
             get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
+        /**
+         * Split a log message at the [MAX_ANDROID_MSG] length limit.
+         */
         internal fun String.logCatSplit(): List<String> = mutableListOf<String>().also { output ->
             var leftIndex = 0
             while (leftIndex < length) {
@@ -77,7 +93,7 @@ class LogCatSeedling : ISeedling {
                         block.length
                     } else {
                         output.add(block.substring(0, lastLineBreak))
-                        lastLineBreak
+                        lastLineBreak + 1
                     }
                 }
             }

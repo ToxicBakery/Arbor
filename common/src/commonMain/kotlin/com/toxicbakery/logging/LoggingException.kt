@@ -1,3 +1,6 @@
 package com.toxicbakery.logging
 
-class LoggingException(msg: String) : Exception(msg)
+/**
+ * A generic exception thrown when logging can not be performed.
+ */
+data class LoggingException(private val msg: String) : Exception(msg)

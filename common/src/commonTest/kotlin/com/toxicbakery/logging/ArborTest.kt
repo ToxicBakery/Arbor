@@ -38,7 +38,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.d("d")
-        assertEquals("${Arbor.DEBUG} null d", seedling.log)
+        assertEquals("${Arbor.DEBUG}  d", seedling.log)
     }
 
     @Test
@@ -46,7 +46,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.d(Exception("d1"), "d1")
-        assertEquals("${Arbor.DEBUG} null d1 d1", seedling.log)
+        assertEquals("${Arbor.DEBUG}  d1 d1", seedling.log)
+    }
+
+    @Test
+    fun testD2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.d(Exception("d2"))
+        assertEquals("${Arbor.DEBUG}   d2", seedling.log)
     }
 
     @Test
@@ -54,7 +62,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.v("v")
-        assertEquals("${Arbor.VERBOSE} null v", seedling.log)
+        assertEquals("${Arbor.VERBOSE}  v", seedling.log)
     }
 
     @Test
@@ -62,7 +70,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.v(Exception("v1"), "v1")
-        assertEquals("${Arbor.VERBOSE} null v1 v1", seedling.log)
+        assertEquals("${Arbor.VERBOSE}  v1 v1", seedling.log)
+    }
+
+    @Test
+    fun testV2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.v(Exception("v2"))
+        assertEquals("${Arbor.VERBOSE}   v2", seedling.log)
     }
 
     @Test
@@ -70,7 +86,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.i("i")
-        assertEquals("${Arbor.INFO} null i", seedling.log)
+        assertEquals("${Arbor.INFO}  i", seedling.log)
     }
 
     @Test
@@ -78,7 +94,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.i(Exception("i1"), "i1")
-        assertEquals("${Arbor.INFO} null i1 i1", seedling.log)
+        assertEquals("${Arbor.INFO}  i1 i1", seedling.log)
+    }
+
+    @Test
+    fun testI2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.i(Exception("i2"))
+        assertEquals("${Arbor.INFO}   i2", seedling.log)
     }
 
     @Test
@@ -86,7 +110,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.w("w")
-        assertEquals("${Arbor.WARNING} null w", seedling.log)
+        assertEquals("${Arbor.WARNING}  w", seedling.log)
     }
 
     @Test
@@ -94,7 +118,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.w(Exception("w1"), "w1")
-        assertEquals("${Arbor.WARNING} null w1 w1", seedling.log)
+        assertEquals("${Arbor.WARNING}  w1 w1", seedling.log)
+    }
+
+    @Test
+    fun testW2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.w(Exception("w2"))
+        assertEquals("${Arbor.WARNING}   w2", seedling.log)
     }
 
     @Test
@@ -102,7 +134,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.e("e")
-        assertEquals("${Arbor.ERROR} null e", seedling.log)
+        assertEquals("${Arbor.ERROR}  e", seedling.log)
     }
 
     @Test
@@ -110,7 +142,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.e(Exception("e1"), "e1")
-        assertEquals("${Arbor.ERROR} null e1 e1", seedling.log)
+        assertEquals("${Arbor.ERROR}  e1 e1", seedling.log)
+    }
+
+    @Test
+    fun testE2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.e(Exception("e2"))
+        assertEquals("${Arbor.ERROR}   e2", seedling.log)
     }
 
     @Test
@@ -118,7 +158,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.wtf("wtf")
-        assertEquals("${Arbor.WTF} null wtf", seedling.log)
+        assertEquals("${Arbor.WTF}  wtf", seedling.log)
     }
 
     @Test
@@ -126,7 +166,15 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         Arbor.wtf(Exception("wtf1"), "wtf1")
-        assertEquals("${Arbor.WTF} null wtf1 wtf1", seedling.log)
+        assertEquals("${Arbor.WTF}  wtf1 wtf1", seedling.log)
+    }
+
+    @Test
+    fun testWtf2() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        Arbor.wtf(Exception("wtf2"))
+        assertEquals("${Arbor.WTF}   wtf2", seedling.log)
     }
 
 }

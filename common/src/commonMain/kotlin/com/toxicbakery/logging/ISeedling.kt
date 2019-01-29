@@ -1,9 +1,18 @@
 package com.toxicbakery.logging
 
+/**
+ * The root logging interface.
+ */
 interface ISeedling {
 
-    val tag: String?
+    /**
+     * A static or dynamically generated tag for logging.
+     */
+    val tag: String
 
-    fun log(level: Int, tag: String?, msg: String, throwable: Throwable? = null)
+    /**
+     * A request to perform logging.
+     */
+    fun log(level: Int, tag: String = "", msg: String, throwable: Throwable? = null)
 
 }

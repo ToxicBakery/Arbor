@@ -3,6 +3,15 @@ plugins {
     id 'kotlin-multiplatform'
     id 'io.gitlab.arturbosch.detekt'
     id 'org.jetbrains.dokka'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = jacoco_version
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
 }
 
 android {
@@ -21,6 +30,9 @@ android {
 }
 
 kotlin {
+    android {
+        publishLibraryVariantsGroupedByFlavor = true
+    }
     targets {
         fromPreset(presets.android, 'android') {
             mavenPublication {
@@ -44,6 +56,18 @@ kotlin {
         }
     }
 }
+
+task jacocoTestReportAndroid(type: JacocoReport) {
+    classDirectories = files("$buildDir/intermediates/packaged-classes/debug")
+    sourceDirectories = files("src/androidMain/kotlin")
+    executionData = fileTree(dir: "$buildDir/jacoco", include: "*.exec")
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+build.dependsOn jacocoTestReportAndroid
 
 detekt {
     input = files("src/androidMain/kotlin")

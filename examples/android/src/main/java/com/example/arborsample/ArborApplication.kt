@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.toxicbakery.logging.Arbor
 import com.toxicbakery.logging.LogCatSeedling
+import com.toxicbakery.logging.Seedling
 
 class ArborApplication : Application() {
 
@@ -11,6 +12,7 @@ class ArborApplication : Application() {
         super.onCreate()
         Arbor.sow(LogCatSeedling())
         Arbor.d("Hello from kotlin")
+        Arbor.tag("test").d("Hello with a tag")
 
         // Test extremely long logs
         Arbor.i((0..4096).joinToString(separator = "") { index ->

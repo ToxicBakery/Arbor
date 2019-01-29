@@ -1,3 +1,3 @@
 package com.toxicbakery.logging
 
-class LoggingException(msg: String) : Exception(msg)
+data class LoggingException(private val msg: String) : Exception(msg)

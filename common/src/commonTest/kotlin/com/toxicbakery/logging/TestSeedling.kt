@@ -1,7 +1,7 @@
 package com.toxicbakery.logging
 
 data class TestSeedling(
-    override val tag: String? = null
+    override val tag: String = ""
 ) : ISeedling {
 
     private val logBuffer: StringBuilder = StringBuilder()
@@ -9,7 +9,7 @@ data class TestSeedling(
     val log: String
         get() = logBuffer.toString()
 
-    override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) {
+    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
         logBuffer.append("$level $tag $msg${throwable?.message?.let { " $it" } ?: ""}")
     }
 

@@ -2,17 +2,30 @@ package com.toxicbakery.logging
 
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
+import com.toxicbakery.logging.Seedling.Companion.prettyPrint
 
 class SeedlingTest {
 
-    private lateinit var testSeedling: TestSeedling
+    private lateinit var bufferOut: ByteArrayOutputStream
+    private lateinit var bufferErr: ByteArrayOutputStream
+    private lateinit var seedling: ISeedling
+    private val defaultTag = SeedlingTest::class.java.simpleName
 
     @Before
     fun setup() {
-        testSeedling = TestSeedling()
-        Arbor.sow(testSeedling)
+        bufferOut = ByteArrayOutputStream()
+        bufferErr = ByteArrayOutputStream()
+        seedling = Seedling(
+            printStreamErr = PrintStream(bufferErr),
+            printStreamOut = PrintStream(bufferOut),
+            callStackIndex = 3
+        )
+        Arbor.sow(seedling)
     }
 
     @After
@@ -27,14 +40,64 @@ class SeedlingTest {
 
     @Test
     fun log() {
+        Arbor.d("Hello, World")
+        assertEquals("$defaultTag: Hello, World\n", bufferOut.toString())
+    }
+
+    @Test
+    fun log_error() {
+        Arbor.e("Hello, World")
+        assertEquals("$defaultTag: Hello, World\n", bufferErr.toString())
+    }
+
+    @Test
+    fun log_withException() {
         Arbor.d(Exception("World"), "Hello,")
-        assertEquals("${Arbor.DEBUG} null Hello, World", testSeedling.log)
+        assertTrue(
+            bufferOut.toString()
+                .startsWith("$defaultTag: Hello, java.lang.Exception: World")
+        )
     }
 
     @Test
     fun log_withTag() {
-        Arbor.tag("tag").d(Exception("World"), "Hello,")
-        assertEquals("${Arbor.DEBUG} tag Hello, World", testSeedling.log)
+        Arbor.tag("tag").d("Hello, World")
+        assertEquals("tag: Hello, World\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLog_nullException() {
+        seedling.log(Arbor.DEBUG, "tag", "msg", null)
+        assertEquals("tag: msg\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLog_withDefaults() {
+        seedling.log(level = Arbor.DEBUG, msg = "")
+        assertEquals("\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLog_withTag() {
+        seedling.log(level = Arbor.DEBUG, tag = "", msg = "")
+        assertEquals("\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLog_withTagAndException() {
+        seedling.log(Arbor.DEBUG, "tag", "msg", Exception())
+        assertTrue(bufferOut.toString()
+            .startsWith("tag: msg java.lang.Exception"))
+    }
+
+    @Test
+    fun prettyPrint_nullMsg() {
+        assertTrue(Exception().prettyPrint().startsWith("java.lang.Exception"))
+    }
+
+    @Test(expected = LoggingException::class)
+    fun invalidCallStack() {
+        Seedling(callStackIndex = Int.MAX_VALUE).tag
     }
 
 }

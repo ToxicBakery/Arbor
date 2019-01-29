@@ -5,10 +5,11 @@ import com.toxicbakery.logging.LogCatSeedling.Companion.logCatSplit
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class LogCatSeedlingTest {
 
-    private lateinit var seedling: ISeedling
+    private lateinit var seedling: LogCatSeedling
 
     @Before
     fun setup() {
@@ -35,6 +36,23 @@ class LogCatSeedlingTest {
         seedling.log(Arbor.VERBOSE, "tag", "msg", Exception("exception"))
         seedling.log(Arbor.WARNING, "tag", "msg", Exception("exception"))
         seedling.log(Arbor.WTF, "tag", "msg", Exception("exception"))
+    }
+
+    @Test
+    fun writeLog() {
+        seedling.writeLog(Arbor.DEBUG, "tag", "msg", null)
+        seedling.writeLog(Arbor.ERROR, "tag", "msg", null)
+        seedling.writeLog(Arbor.INFO, "tag", "msg", null)
+        seedling.writeLog(Arbor.VERBOSE, "tag", "msg", null)
+        seedling.writeLog(Arbor.WARNING, "tag", "msg", null)
+        seedling.writeLog(Arbor.WTF, "tag", "msg", null)
+
+        seedling.writeLog(Arbor.DEBUG, "tag", "msg", Exception("exception"))
+        seedling.writeLog(Arbor.ERROR, "tag", "msg", Exception("exception"))
+        seedling.writeLog(Arbor.INFO, "tag", "msg", Exception("exception"))
+        seedling.writeLog(Arbor.VERBOSE, "tag", "msg", Exception("exception"))
+        seedling.writeLog(Arbor.WARNING, "tag", "msg", Exception("exception"))
+        seedling.writeLog(Arbor.WTF, "tag", "msg", Exception("exception"))
     }
 
     @Test

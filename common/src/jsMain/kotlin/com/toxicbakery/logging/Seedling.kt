@@ -2,10 +2,10 @@ package com.toxicbakery.logging
 
 class Seedling : ISeedling {
 
-    override val tag: String?
-        get() = null
+    override val tag: String
+        get() = ""
 
-    override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) {
+    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
         val message = "$tag$msg"
         val trace = throwable?.trace ?: ""
         when {

@@ -2,6 +2,7 @@ package com.toxicbakery.logging
 
 import android.os.Build
 import android.util.Log
+import com.toxicbakery.logging.Seedling.Companion.prettyPrint
 
 class LogCatSeedling : ISeedling {
 
@@ -22,8 +23,7 @@ class LogCatSeedling : ISeedling {
                     .last()
             }
 
-    override fun log(level: Int, tag: String?, msg: String, throwable: Throwable?) {
-        if (tag == null) throw NullPointerException("Tag must not be null")
+    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
         val tt = if (IS_AT_LEAST_N || tag.length < MAX_ANDROID_TAG) tag else tag.substring(0, MAX_ANDROID_TAG)
         if (throwable == null) {
             if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tt, msg, throwable)
@@ -35,14 +35,14 @@ class LogCatSeedling : ISeedling {
         .forEach { messageChunk -> writeLog(level, tag, messageChunk, null) }
 
     @Suppress("ComplexMethod")
-    private fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) =
+    internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?): Int =
         when (level) {
-            Arbor.DEBUG -> throwable?.let { Log.d(tag, msg, it) } ?: Log.d(tag, msg)
-            Arbor.ERROR -> throwable?.let { Log.e(tag, msg, it) } ?: Log.e(tag, msg)
-            Arbor.INFO -> throwable?.let { Log.i(tag, msg, it) } ?: Log.i(tag, msg)
-            Arbor.VERBOSE -> throwable?.let { Log.v(tag, msg, it) } ?: Log.v(tag, msg)
-            Arbor.WARNING -> throwable?.let { Log.w(tag, msg, it) } ?: Log.w(tag, msg)
-            Arbor.WTF -> throwable?.let { Log.wtf(tag, msg, it) } ?: Log.wtf(tag, msg)
+            Arbor.DEBUG -> if (throwable == null) Log.d(tag, msg) else Log.d(tag, msg, throwable)
+            Arbor.ERROR -> if (throwable == null) Log.e(tag, msg) else Log.e(tag, msg, throwable)
+            Arbor.INFO -> if (throwable == null) Log.i(tag, msg) else Log.i(tag, msg, throwable)
+            Arbor.VERBOSE -> if (throwable == null) Log.v(tag, msg) else Log.v(tag, msg, throwable)
+            Arbor.WARNING -> if (throwable == null) Log.w(tag, msg) else Log.w(tag, msg, throwable)
+            Arbor.WTF -> if (throwable == null) Log.wtf(tag, msg) else Log.wtf(tag, msg, throwable)
             else -> throw LoggingException("Unsupported log level $level")
         }
 
@@ -61,13 +61,6 @@ class LogCatSeedling : ISeedling {
         internal const val MAX_ANDROID_MSG = 4023
         private val IS_AT_LEAST_N: Boolean
             get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-
-        internal fun Throwable.prettyPrint(): String = stackTrace
-            .mapIndexed { index, stackTraceElement ->
-                (if (index == 0) javaClass.name.plus(if (message == null) "\n" else ": $message\n") else "")
-                    .plus("\tat $stackTraceElement")
-            }
-            .joinToString(separator = "\n")
 
         internal fun String.logCatSplit(): List<String> = mutableListOf<String>().also { output ->
             var leftIndex = 0

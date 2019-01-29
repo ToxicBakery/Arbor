@@ -5,6 +5,11 @@ plugins {
     id 'signing'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = jacoco_version
 }
 
 archivesBaseName = 'arbor'
@@ -22,7 +27,10 @@ kotlin {
         fromPreset(presets.js, 'js') {
             tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
             kotlinJsNodeTests {
-                thisTarget(js)
+                thisTarget(js) {
+                    //engine = mochaWithIstanbul
+                    engine = mocha
+                }
             }
             mavenPublication {
                 artifactId = 'arbor-js'
@@ -62,6 +70,44 @@ kotlin {
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
             }
         }
+    }
+}
+
+task jacocoTestReportJvm(type: JacocoReport) {
+    classDirectories = files(
+            "$buildDir/classes/kotlin/common/main",
+            "$buildDir/classes/kotlin/jvm/main")
+    sourceDirectories = files(
+            "src/commonMain/kotlin",
+            "src/jvmMain/kotlin")
+    //noinspection ChangeToOperator
+    executionData = files("$buildDir/jacoco/jvmTest.exec")
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+task jacocoTestReportUnified(type: JacocoReport) {
+    classDirectories = files(
+            "$buildDir/classes/kotlin/common/main",
+            "$buildDir/classes/kotlin/jvm/main",
+            "android/build/intermediates/packaged-classes/debug")
+    sourceDirectories = files(
+            "src/commonMain/kotlin",
+            "src/jvmMain/kotlin",
+            "android/src/androidMain/kotlin")
+    //noinspection ChangeToOperator
+    executionData = files(
+            "$buildDir/jacoco/jvmTest.exec")
+            .plus(fileTree(dir: "android/build/jacoco", include: "*.exec"))
+
+    reports {
+        xml.enabled = true
+        xml.setDestination(file("$buildDir/reports/jacoco/unified/jacocoTestReportUnified.xml"))
+        html.enabled = true
+        html.setDestination(file("$buildDir/reports/jacoco/unified/html"))
     }
 }
 
@@ -272,6 +318,6 @@ signing {
     sign publishing.publications
 }
 
-build.dependsOn ':common:android:assemble'
+build.dependsOn ':common:android:build', 'jacocoTestReportJvm', 'jacocoTestReportUnified'
 publish.dependsOn build
 publishToMavenLocal.dependsOn build

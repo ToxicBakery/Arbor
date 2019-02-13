@@ -1,11 +1,13 @@
 package com.toxicbakery.logging
 
 import java.io.PrintStream
+import java.util.*
 
 class Seedling @JvmOverloads constructor(
     private val printStreamErr: PrintStream = System.err,
     private val printStreamOut: PrintStream = System.out,
-    private val callStackIndex: Int = CALL_STACK_INDEX
+    private val callStackIndex: Int = CALL_STACK_INDEX,
+    private val formatter: Formatter = Formatter()
 ) : ISeedling {
 
     private val Array<StackTraceElement>.asTag: String
@@ -23,16 +25,25 @@ class Seedling @JvmOverloads constructor(
             .stackTrace
             .asTag
 
-    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?): Unit =
-        tag.withMessage(msg)
-            .withThrowable(throwable)
-            .let { message ->
-                when (level) {
-                    Arbor.ERROR,
-                    Arbor.WTF -> printStreamErr.println(message)
-                    else -> printStreamOut.println(message)
-                }
+    override fun log(
+        level: Int,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+        vararg args: Any
+    ): Unit = tag.withMessage(msg)
+        .let { taggedMessage ->
+            if (args.isEmpty()) taggedMessage
+            else formatter.format(taggedMessage, args).toString()
+        }
+        .withThrowable(throwable)
+        .let { message ->
+            when (level) {
+                Arbor.ERROR,
+                Arbor.WTF -> printStreamErr.println(message)
+                else -> printStreamOut.println(message)
             }
+        }
 
     private fun String.withMessage(msg: String): String =
         if (isEmpty()) msg

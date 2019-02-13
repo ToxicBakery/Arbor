@@ -2,6 +2,7 @@ package com.toxicbakery.logging
 
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
+import kotlin.native.concurrent.ThreadLocal
 
 /**
  * Primary interface to sow, harvest, and perform logging actions against seedlings. The implementation is no op by
@@ -10,6 +11,7 @@ import kotlin.jvm.JvmStatic
 @Suppress("TooManyFunctions")
 class Arbor {
 
+    @ThreadLocal
     companion object {
         const val DEBUG = 1
         const val VERBOSE = 2
@@ -65,6 +67,18 @@ class Arbor {
         fun d(throwable: Throwable, msg: String = "") = perennial.d(throwable, msg)
 
         /**
+         * Log a debug message.
+         */
+        @JvmStatic
+        fun d(msg: String, vararg args: Any) = perennial.d(msg, args)
+
+        /**
+         * Log a debug message.
+         */
+        @JvmStatic
+        fun d(throwable: Throwable, msg: String, vararg args: Any) = perennial.d(throwable, msg, args)
+
+        /**
          * Log a verbose message.
          */
         @JvmStatic
@@ -76,6 +90,18 @@ class Arbor {
         @JvmStatic
         @JvmOverloads
         fun v(throwable: Throwable, msg: String = "") = perennial.v(throwable, msg)
+
+        /**
+         * Log a verbose message.
+         */
+        @JvmStatic
+        fun v(msg: String, vararg args: Any) = perennial.v(msg, args)
+
+        /**
+         * Log a verbose message.
+         */
+        @JvmStatic
+        fun v(throwable: Throwable, msg: String, vararg args: Any) = perennial.v(throwable, msg, args)
 
         /**
          * Log an info message.
@@ -91,6 +117,18 @@ class Arbor {
         fun i(throwable: Throwable, msg: String = "") = perennial.i(throwable, msg)
 
         /**
+         * Log a info message.
+         */
+        @JvmStatic
+        fun i(msg: String, vararg args: Any) = perennial.i(msg, args)
+
+        /**
+         * Log a info message.
+         */
+        @JvmStatic
+        fun i(throwable: Throwable, msg: String, vararg args: Any) = perennial.i(throwable, msg, args)
+
+        /**
          * Log a warning message.
          */
         @JvmStatic
@@ -102,6 +140,18 @@ class Arbor {
         @JvmStatic
         @JvmOverloads
         fun w(throwable: Throwable, msg: String = "") = perennial.w(throwable, msg)
+
+        /**
+         * Log a warning message.
+         */
+        @JvmStatic
+        fun w(msg: String, vararg args: Any) = perennial.w(msg, args)
+
+        /**
+         * Log a warning message.
+         */
+        @JvmStatic
+        fun w(throwable: Throwable, msg: String, vararg args: Any) = perennial.w(throwable, msg, args)
 
         /**
          * Log an error message.
@@ -117,6 +167,18 @@ class Arbor {
         fun e(throwable: Throwable, msg: String = "") = perennial.e(throwable, msg)
 
         /**
+         * Log a error message.
+         */
+        @JvmStatic
+        fun e(msg: String, vararg args: Any) = perennial.e(msg, args)
+
+        /**
+         * Log a error message.
+         */
+        @JvmStatic
+        fun e(throwable: Throwable, msg: String, vararg args: Any) = perennial.e(throwable, msg, args)
+
+        /**
          * Log a wtf message.
          */
         @JvmStatic
@@ -128,6 +190,18 @@ class Arbor {
         @JvmStatic
         @JvmOverloads
         fun wtf(throwable: Throwable, msg: String = "") = perennial.wtf(throwable, msg)
+
+        /**
+         * Log a wtf message.
+         */
+        @JvmStatic
+        fun wtf(msg: String, vararg args: Any) = perennial.wtf(msg, args)
+
+        /**
+         * Log a wtf message.
+         */
+        @JvmStatic
+        fun wtf(throwable: Throwable, msg: String, vararg args: Any) = perennial.wtf(throwable, msg, args)
 
     }
 

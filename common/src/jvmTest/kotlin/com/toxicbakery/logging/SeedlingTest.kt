@@ -1,5 +1,7 @@
 package com.toxicbakery.logging
 
+import com.toxicbakery.logging.Seedling.Companion.isTopLevelArborCall
+import com.toxicbakery.logging.Seedling.Companion.prettyPrint
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -7,7 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import com.toxicbakery.logging.Seedling.Companion.prettyPrint
+import kotlin.test.assertFalse
 
 class SeedlingTest {
 
@@ -99,5 +101,21 @@ class SeedlingTest {
     fun invalidCallStack() {
         Seedling(callStackIndex = Int.MAX_VALUE).tag
     }
+
+    @Test
+    fun isTopLevelArborCall() {
+        assertTrue(createStackTraceElementForClass(Arbor::class.java).isTopLevelArborCall)
+        assertTrue(createStackTraceElementForClass(Arbor.Companion::class.java).isTopLevelArborCall)
+        assertTrue(createStackTraceElementForClass(TaggedSeedling::class.java).isTopLevelArborCall)
+        assertFalse(createStackTraceElementForClass(Exception::class.java).isTopLevelArborCall)
+    }
+
+    private fun <T> createStackTraceElementForClass(clazz: Class<T>) =
+        StackTraceElement(
+            clazz.name,
+            "method",
+            "fileName",
+            0 // LineNumber
+        )
 
 }

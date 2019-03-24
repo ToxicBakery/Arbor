@@ -1,7 +1,7 @@
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: toxicbakery/alpine-glibc-android:release-2.0
+    - image: toxicbakery/alpine-glibc-android:1.x
   environment:
     TERM: dumb
 

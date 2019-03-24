@@ -3,6 +3,7 @@ package com.toxicbakery.logging
 import android.os.Build
 import android.util.Log
 import com.toxicbakery.logging.Seedling.Companion.prettyPrint
+import java.util.*
 
 /**
  * General purpose logging for Android applications with auto tagging and long log wrapping. Implementation avoids the
@@ -10,7 +11,9 @@ import com.toxicbakery.logging.Seedling.Companion.prettyPrint
  * before forcing hard breaks. Tagging is automatically implemented by using an exception stack trace to determine
  * the calling code.
  */
-class LogCatSeedling : ISeedling {
+class LogCatSeedling(
+    private val formatter: Formatter = Formatter()
+) : ISeedling {
 
     /**
      * Tag generation that uses an exception stacktrace to automatically determine the calling class.
@@ -36,19 +39,38 @@ class LogCatSeedling : ISeedling {
      * Logging implementation that automatically splits on long lines and trims tags that will not fit the hard limit
      * of older Android versions.
      */
-    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
-        val tt = if (IS_AT_LEAST_N || tag.length < MAX_ANDROID_TAG) tag else tag.substring(0, MAX_ANDROID_TAG)
+    override fun log(
+        level: Int,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+        vararg args: Any
+    ) = log(level, tag.asAndroidTag, msg.formatMessage(args), throwable)
+
+    private fun log(
+        level: Int,
+        tag: String,
+        msg: String,
+        throwable: Throwable?
+    ) =
         if (throwable == null) {
-            if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tt, msg, throwable)
+            if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tag, msg, throwable)
             else msg.splitAndLog(level)
         } else "$msg\n${throwable.prettyPrint()}".splitAndLog(level)
-    }
+
+    private val String.asAndroidTag: String
+        get() = if (IS_AT_LEAST_N || length < MAX_ANDROID_TAG) this
+        else substring(0, MAX_ANDROID_TAG)
+
+    private fun String.formatMessage(vararg args: Any): String =
+        if (args.isEmpty()) this
+        else formatter.format(this, args).toString()
 
     private fun String.splitAndLog(level: Int) = logCatSplit()
         .forEach { messageChunk -> writeLog(level, tag, messageChunk, null) }
 
     @Suppress("ComplexMethod")
-    internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?): Int =
+    internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) {
         when (level) {
             Arbor.DEBUG -> if (throwable == null) Log.d(tag, msg) else Log.d(tag, msg, throwable)
             Arbor.ERROR -> if (throwable == null) Log.e(tag, msg) else Log.e(tag, msg, throwable)
@@ -58,6 +80,7 @@ class LogCatSeedling : ISeedling {
             Arbor.WTF -> if (throwable == null) Log.wtf(tag, msg) else Log.wtf(tag, msg, throwable)
             else -> throw LoggingException("Unsupported log level $level")
         }
+    }
 
     companion object {
         private const val CALL_STACK_INDEX_DIRECT_CALLER = 1

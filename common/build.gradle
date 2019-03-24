@@ -28,7 +28,6 @@ kotlin {
             tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
             kotlinJsNodeTests {
                 thisTarget(js) {
-                    //engine = mochaWithIstanbul
                     engine = mocha
                 }
             }
@@ -36,38 +35,164 @@ kotlin {
                 artifactId = 'arbor-js'
             }
         }
+        fromPreset(presets.androidNativeArm32, 'androidNativeArm32') {
+            mavenPublication {
+                artifactId = 'arbor-androidArm32'
+            }
+        }
+        fromPreset(presets.androidNativeArm64, 'androidNativeArm64') {
+            mavenPublication {
+                artifactId = 'arbor-androidArm64'
+            }
+        }
+        fromPreset(presets.linuxArm32Hfp, 'linuxArm32Hfp') {
+            mavenPublication {
+                artifactId = 'arbor-linuxArm32Hfp'
+            }
+        }
+        fromPreset(presets.linuxMips32, 'linuxMips32') {
+            mavenPublication {
+                artifactId = 'arbor-linuxMips32'
+            }
+        }
+        fromPreset(presets.linuxMipsel32, 'linuxMipsel32') {
+            mavenPublication {
+                artifactId = 'arbor-linuxMipsel32'
+            }
+        }
+        fromPreset(presets.linuxX64, 'linuxX64') {
+            mavenPublication {
+                artifactId = 'arbor-linuxX64'
+            }
+        }
+        fromPreset(presets.wasm32, 'wasm32'){
+            mavenPublication {
+                artifactId = 'arbor-wasm32'
+            }
+        }
+        fromPreset(presets.linuxX64, 'linuxX64'){
+            mavenPublication {
+                artifactId = 'arbor-linuxX64'
+            }
+        }
+        fromPreset(presets.macosX64, 'macosX64'){
+            mavenPublication {
+                artifactId = 'arbor-macosX64'
+            }
+        }
+        fromPreset(presets.mingwX64, 'mingwX64'){
+            mavenPublication {
+                artifactId = 'arbor-mingwX64'
+            }
+        }
+        fromPreset(presets.iosArm64, 'iosArm32'){
+            mavenPublication {
+                artifactId = 'arbor-iosArm32'
+            }
+        }
+        fromPreset(presets.iosArm64, 'iosArm64'){
+            mavenPublication {
+                artifactId = 'arbor-iosArm64'
+            }
+        }
+        fromPreset(presets.iosX64, 'iosX64'){
+            mavenPublication {
+                artifactId = 'arbor-iosX64'
+            }
+        }
     }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-common"
+                implementation kotlin('stdlib-common')
             }
         }
         commonTest {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-common"
-                implementation "org.jetbrains.kotlin:kotlin-test-annotations-common"
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
             }
         }
         jsMain {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-stdlib-js"
+                implementation kotlin('stdlib-js')
             }
         }
         jsTest {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+                implementation kotlin('test-js')
             }
         }
         jvmMain {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
+                implementation kotlin('stdlib')
             }
         }
         jvmTest {
             dependencies {
-                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+                implementation kotlin('test-junit')
+            }
+        }
+        androidNativeArm32Main {
+            dependencies {
+                implementation kotlin('stdlib')
+                //implementation "org.jetbrains.kotlinx:atomicfu-native:$atomicfu_version"
+            }
+        }
+        androidNativeArm64Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        linuxArm32HfpMain {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        linuxMips32Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        linuxMipsel32Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        wasm32Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        linuxX64Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        macosX64Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        mingwX64Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        iosArm32Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        iosArm64Main {
+            dependencies {
+                implementation kotlin('stdlib')
+            }
+        }
+        iosX64Main {
+            dependencies {
+                implementation kotlin('stdlib')
             }
         }
     }

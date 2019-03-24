@@ -8,7 +8,12 @@ internal class TaggedSeedling(
     private val wrapped: ISeedling
 ) : ISeedling {
 
-    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) =
-        wrapped.log(level, this.tag, msg, throwable)
+    override fun log(
+        level: Int,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+        vararg args: Any
+    ) = wrapped.log(level, this.tag, msg, throwable, args)
 
 }

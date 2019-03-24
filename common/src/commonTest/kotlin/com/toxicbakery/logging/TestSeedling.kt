@@ -9,8 +9,15 @@ data class TestSeedling(
     val log: String
         get() = logBuffer.toString()
 
-    override fun log(level: Int, tag: String, msg: String, throwable: Throwable?) {
-        logBuffer.append("$level $tag $msg${throwable?.message?.let { " $it" } ?: ""}")
+    override fun log(
+        level: Int,
+        tag: String,
+        msg: String,
+        throwable: Throwable?,
+        vararg args: Any
+    ) {
+        val exceptionString = throwable?.message?.let { " $it" } ?: ""
+        logBuffer.append("$level $tag $msg$exceptionString")
     }
 
 }

@@ -14,7 +14,7 @@ data class TestSeedling(
         tag: String,
         msg: String,
         throwable: Throwable?,
-        vararg args: Any
+        args: Array<out Any?>?
     ) {
         val exceptionString = throwable?.message?.let { " $it" } ?: ""
         logBuffer.append("$level $tag $msg$exceptionString")

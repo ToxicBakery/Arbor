@@ -18,7 +18,7 @@ interface ISeedling {
         tag: String = "",
         msg: String,
         throwable: Throwable? = null,
-        vararg args: Any
+        args: Array<out Any?>? = null
     )
 
 }

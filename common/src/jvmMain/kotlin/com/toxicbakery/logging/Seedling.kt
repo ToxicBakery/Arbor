@@ -6,8 +6,7 @@ import java.util.*
 class Seedling @JvmOverloads constructor(
     private val printStreamErr: PrintStream = System.err,
     private val printStreamOut: PrintStream = System.out,
-    private val callStackIndex: Int = CALL_STACK_INDEX,
-    private val formatter: Formatter = Formatter()
+    private val callStackIndex: Int = CALL_STACK_INDEX
 ) : ISeedling {
 
     private val Array<StackTraceElement>.asTag: String
@@ -25,16 +24,17 @@ class Seedling @JvmOverloads constructor(
             .stackTrace
             .asTag
 
+    @Suppress("SpreadOperator")
     override fun log(
         level: Int,
         tag: String,
         msg: String,
         throwable: Throwable?,
-        vararg args: Any
+        args: Array<out Any?>?
     ): Unit = tag.withMessage(msg)
         .let { taggedMessage ->
-            if (args.isEmpty()) taggedMessage
-            else formatter.format(taggedMessage, args).toString()
+            if (args == null || args.isEmpty()) taggedMessage
+            else taggedMessage.format(*args)
         }
         .withThrowable(throwable)
         .let { message ->
@@ -57,6 +57,7 @@ class Seedling @JvmOverloads constructor(
         private const val CALL_STACK_INDEX = -1
         private const val INVALID_STACK = "Synthetic stacktrace didn't have enough elements: are you using proguard?"
 
+        @JvmStatic
         fun Throwable.prettyPrint(): String = stackTrace
             .mapIndexed { index, stackTraceElement ->
                 (if (index == 0) javaClass.name.plus(if (message == null) "\n" else ": $message\n") else "")
@@ -64,9 +65,9 @@ class Seedling @JvmOverloads constructor(
             }
             .joinToString(separator = "\n")
 
+        @JvmStatic
         internal val StackTraceElement.isTopLevelArborCall: Boolean
             get() = className == Arbor::class.java.name
-                    || className == Arbor.Companion::class.java.name
                     || className == TaggedSeedling::class.java.name
 
     }

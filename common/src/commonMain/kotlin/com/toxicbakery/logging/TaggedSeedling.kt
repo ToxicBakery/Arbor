@@ -13,7 +13,7 @@ internal class TaggedSeedling(
         tag: String,
         msg: String,
         throwable: Throwable?,
-        vararg args: Any
+        args: Array<out Any?>?
     ) = wrapped.log(level, this.tag, msg, throwable, args)
 
 }

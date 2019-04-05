@@ -3,7 +3,7 @@ package com.toxicbakery.logging
 import android.os.Build
 import android.util.Log
 import com.toxicbakery.logging.Seedling.Companion.prettyPrint
-import java.util.*
+import kotlin.math.min
 
 /**
  * General purpose logging for Android applications with auto tagging and long log wrapping. Implementation avoids the
@@ -11,9 +11,7 @@ import java.util.*
  * before forcing hard breaks. Tagging is automatically implemented by using an exception stack trace to determine
  * the calling code.
  */
-class LogCatSeedling(
-    private val formatter: Formatter = Formatter()
-) : ISeedling {
+class LogCatSeedling : ISeedling {
 
     /**
      * Tag generation that uses an exception stacktrace to automatically determine the calling class.
@@ -25,8 +23,7 @@ class LogCatSeedling(
             .let { trace ->
                 // Calling from Java has an extra class in the stack trace (Arbor) resulting in the wrong class name
                 val stackIndex = when {
-                    trace[3].className == Arbor::class.java.name -> CALL_STACK_INDEX_JAVA_CALLER
-                    trace[2].className == Arbor.Companion::class.java.name -> CALL_STACK_INDEX_KOTLIN_CALLER
+                    trace[2].className == Arbor::class.java.name -> CALL_STACK_INDEX_JAVA_CALLER
                     else -> CALL_STACK_INDEX_DIRECT_CALLER
                 }
                 if (trace.size <= stackIndex) throw LoggingException(INVALID_STACK)
@@ -39,53 +36,36 @@ class LogCatSeedling(
      * Logging implementation that automatically splits on long lines and trims tags that will not fit the hard limit
      * of older Android versions.
      */
+    @Suppress("SpreadOperator")
     override fun log(
         level: Int,
         tag: String,
         msg: String,
         throwable: Throwable?,
-        vararg args: Any
-    ) = log(level, tag.asAndroidTag, msg.formatMessage(args), throwable)
+        args: Array<out Any?>?
+    ) = log(
+        level = level,
+        tag = tag.asAndroidTag,
+        msg = if (args == null) msg else msg.format(*args),
+        throwable = throwable
+    )
 
     private fun log(
         level: Int,
         tag: String,
         msg: String,
         throwable: Throwable?
-    ) =
-        if (throwable == null) {
+    ) = if (throwable == null) {
             if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tag, msg, throwable)
             else msg.splitAndLog(level)
         } else "$msg\n${throwable.prettyPrint()}".splitAndLog(level)
 
-    private val String.asAndroidTag: String
-        get() = if (IS_AT_LEAST_N || length < MAX_ANDROID_TAG) this
-        else substring(0, MAX_ANDROID_TAG)
-
-    private fun String.formatMessage(vararg args: Any): String =
-        if (args.isEmpty()) this
-        else formatter.format(this, args).toString()
-
     private fun String.splitAndLog(level: Int) = logCatSplit()
         .forEach { messageChunk -> writeLog(level, tag, messageChunk, null) }
 
-    @Suppress("ComplexMethod")
-    internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) {
-        when (level) {
-            Arbor.DEBUG -> if (throwable == null) Log.d(tag, msg) else Log.d(tag, msg, throwable)
-            Arbor.ERROR -> if (throwable == null) Log.e(tag, msg) else Log.e(tag, msg, throwable)
-            Arbor.INFO -> if (throwable == null) Log.i(tag, msg) else Log.i(tag, msg, throwable)
-            Arbor.VERBOSE -> if (throwable == null) Log.v(tag, msg) else Log.v(tag, msg, throwable)
-            Arbor.WARNING -> if (throwable == null) Log.w(tag, msg) else Log.w(tag, msg, throwable)
-            Arbor.WTF -> if (throwable == null) Log.wtf(tag, msg) else Log.wtf(tag, msg, throwable)
-            else -> throw LoggingException("Unsupported log level $level")
-        }
-    }
-
     companion object {
         private const val CALL_STACK_INDEX_DIRECT_CALLER = 1
-        private const val CALL_STACK_INDEX_KOTLIN_CALLER = 3
-        private const val CALL_STACK_INDEX_JAVA_CALLER = 4
+        private const val CALL_STACK_INDEX_JAVA_CALLER = 3
         private const val INVALID_STACK = "Synthetic stacktrace didn't have enough elements: are you using proguard?"
         private const val MAX_ANDROID_TAG = 23
 
@@ -98,14 +78,34 @@ class LogCatSeedling(
         private val IS_AT_LEAST_N: Boolean
             get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
+        @JvmStatic
+        private val String.asAndroidTag: String
+            get() = if (IS_AT_LEAST_N || length < MAX_ANDROID_TAG) this
+            else substring(0, MAX_ANDROID_TAG)
+
+        @Suppress("ComplexMethod")
+        @JvmStatic
+        internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) {
+            when (level) {
+                Arbor.DEBUG -> if (throwable == null) Log.d(tag, msg) else Log.d(tag, msg, throwable)
+                Arbor.ERROR -> if (throwable == null) Log.e(tag, msg) else Log.e(tag, msg, throwable)
+                Arbor.INFO -> if (throwable == null) Log.i(tag, msg) else Log.i(tag, msg, throwable)
+                Arbor.VERBOSE -> if (throwable == null) Log.v(tag, msg) else Log.v(tag, msg, throwable)
+                Arbor.WARNING -> if (throwable == null) Log.w(tag, msg) else Log.w(tag, msg, throwable)
+                Arbor.WTF -> if (throwable == null) Log.wtf(tag, msg) else Log.wtf(tag, msg, throwable)
+                else -> throw LoggingException("Unsupported log level $level")
+            }
+        }
+
         /**
          * Split a log message at the [MAX_ANDROID_MSG] length limit.
          */
+        @JvmStatic
         internal fun String.logCatSplit(): List<String> = mutableListOf<String>().also { output ->
             var leftIndex = 0
             while (leftIndex < length) {
                 val rightIndex = leftIndex + MAX_ANDROID_MSG
-                val block = substring(leftIndex, if (rightIndex > length) length else rightIndex)
+                val block = substring(leftIndex, min(rightIndex, length))
                 if (block.length < MAX_ANDROID_MSG) {
                     output.add(block)
                     leftIndex = length

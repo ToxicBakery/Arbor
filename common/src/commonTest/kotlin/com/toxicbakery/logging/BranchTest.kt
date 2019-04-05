@@ -29,13 +29,13 @@ class BranchTest {
 
     @Test
     fun d2() {
-        branch.d("msg", "")
+        branch.d("msg", arrayOf(""))
         assertEquals("${Arbor.DEBUG} tag msg", seedling.log)
     }
 
     @Test
     fun d3() {
-        branch.d(Exception(), "msg", "")
+        branch.d(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.DEBUG} tag msg", seedling.log)
     }
 
@@ -53,13 +53,13 @@ class BranchTest {
 
     @Test
     fun v2() {
-        branch.v("msg", "")
+        branch.v("msg", arrayOf(""))
         assertEquals("${Arbor.VERBOSE} tag msg", seedling.log)
     }
 
     @Test
     fun v3() {
-        branch.v(Exception(), "msg", "")
+        branch.v(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.VERBOSE} tag msg", seedling.log)
     }
 
@@ -77,13 +77,13 @@ class BranchTest {
 
     @Test
     fun i2() {
-        branch.i("msg", "")
+        branch.i("msg", arrayOf(""))
         assertEquals("${Arbor.INFO} tag msg", seedling.log)
     }
 
     @Test
     fun i3() {
-        branch.i(Exception(), "msg", "")
+        branch.i(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.INFO} tag msg", seedling.log)
     }
 
@@ -101,13 +101,13 @@ class BranchTest {
 
     @Test
     fun w2() {
-        branch.w("msg", "")
+        branch.w("msg", arrayOf(""))
         assertEquals("${Arbor.WARNING} tag msg", seedling.log)
     }
 
     @Test
     fun w3() {
-        branch.w(Exception(), "msg", "")
+        branch.w(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.WARNING} tag msg", seedling.log)
     }
 
@@ -125,13 +125,13 @@ class BranchTest {
 
     @Test
     fun e2() {
-        branch.e("msg", "")
+        branch.e("msg", arrayOf(""))
         assertEquals("${Arbor.ERROR} tag msg", seedling.log)
     }
 
     @Test
     fun e3() {
-        branch.e(Exception(), "msg", "")
+        branch.e(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.ERROR} tag msg", seedling.log)
     }
 
@@ -149,13 +149,13 @@ class BranchTest {
 
     @Test
     fun wtf2() {
-        branch.wtf("msg", "")
+        branch.wtf("msg", arrayOf(""))
         assertEquals("${Arbor.WTF} tag msg", seedling.log)
     }
 
     @Test
     fun wtf3() {
-        branch.wtf(Exception(), "msg", "")
+        branch.wtf(Exception(), "msg", arrayOf(""))
         assertEquals("${Arbor.WTF} tag msg", seedling.log)
     }
 

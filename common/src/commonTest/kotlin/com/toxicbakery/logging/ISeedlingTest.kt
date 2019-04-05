@@ -13,7 +13,7 @@ class ISeedlingTest {
                 tag: String,
                 msg: String,
                 throwable: Throwable?,
-                vararg args: Any
+                args: Array<out Any?>?
             ) = Unit
         }
 

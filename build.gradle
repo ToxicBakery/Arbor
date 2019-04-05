@@ -41,11 +41,4 @@ subprojects {
         maven { url "https://dl.bintray.com/kotlin/kotlin-eap" }
         maven { url "https://dl.bintray.com/salomonbrys/gradle-plugins" }
     }
-
-    afterEvaluate {
-        afterEvaluate {
-            check.dependsOn('detekt')
-        }
-    }
-
 }

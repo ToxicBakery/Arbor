@@ -10,7 +10,7 @@ class Seedling : ISeedling {
         tag: String,
         msg: String,
         throwable: Throwable?,
-        vararg args: Any
+        args: Array<out Any?>?
     ) {
         val message = "$tag$msg"
         val trace = throwable?.trace ?: ""

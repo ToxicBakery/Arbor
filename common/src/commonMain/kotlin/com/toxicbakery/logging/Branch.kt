@@ -55,13 +55,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a debug message.
      */
-    fun d(msg: String, vararg args: Any) =
+    fun d(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.DEBUG, seedling.tag, msg, null, args) }
 
     /**
      * Log a debug message.
      */
-    fun d(throwable: Throwable, msg: String, vararg args: Any) =
+    fun d(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.DEBUG, seedling.tag, msg, throwable, args) }
 
     /**
@@ -78,13 +78,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a verbose message.
      */
-    fun v(msg: String, vararg args: Any) =
+    fun v(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.VERBOSE, seedling.tag, msg, null, args) }
 
     /**
      * Log a verbose message.
      */
-    fun v(throwable: Throwable, msg: String, vararg args: Any) =
+    fun v(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.VERBOSE, seedling.tag, msg, throwable, args) }
 
     /**
@@ -101,13 +101,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a info message.
      */
-    fun i(msg: String, vararg args: Any) =
+    fun i(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.INFO, seedling.tag, msg, null, args) }
 
     /**
      * Log a info message.
      */
-    fun i(throwable: Throwable, msg: String, vararg args: Any) =
+    fun i(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.INFO, seedling.tag, msg, throwable, args) }
 
     /**
@@ -124,13 +124,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a warning message.
      */
-    fun w(msg: String, vararg args: Any) =
+    fun w(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.WARNING, seedling.tag, msg, null, args) }
 
     /**
      * Log a warning message.
      */
-    fun w(throwable: Throwable, msg: String, vararg args: Any) =
+    fun w(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.WARNING, seedling.tag, msg, throwable, args) }
 
     /**
@@ -147,13 +147,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a error message.
      */
-    fun e(msg: String, vararg args: Any) =
+    fun e(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.ERROR, seedling.tag, msg, null, args) }
 
     /**
      * Log a error message.
      */
-    fun e(throwable: Throwable, msg: String, vararg args: Any) =
+    fun e(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.ERROR, seedling.tag, msg, throwable, args) }
 
     /**
@@ -170,13 +170,13 @@ class Branch internal constructor(seedlings: Set<ISeedling> = setOf()) {
     /**
      * Log a wtf message.
      */
-    fun wtf(msg: String, vararg args: Any) =
+    fun wtf(msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.WTF, seedling.tag, msg, null, args) }
 
     /**
      * Log a wtf message.
      */
-    fun wtf(throwable: Throwable, msg: String, vararg args: Any) =
+    fun wtf(throwable: Throwable, msg: String, args: Array<out Any?>?) =
         seedlings.forEach { seedling -> seedling.log(Arbor.WTF, seedling.tag, msg, throwable, args) }
 
 }

@@ -12,8 +12,6 @@ jacoco {
     toolVersion = jacoco_version
 }
 
-archivesBaseName = 'arbor'
-
 // workaround for https://youtrack.jetbrains.com/issue/KT-27170
 configurations.create("compileClasspath")
 
@@ -33,71 +31,6 @@ kotlin {
             }
             mavenPublication {
                 artifactId = 'arbor-js'
-            }
-        }
-        fromPreset(presets.androidNativeArm32, 'androidNativeArm32') {
-            mavenPublication {
-                artifactId = 'arbor-androidArm32'
-            }
-        }
-        fromPreset(presets.androidNativeArm64, 'androidNativeArm64') {
-            mavenPublication {
-                artifactId = 'arbor-androidArm64'
-            }
-        }
-        fromPreset(presets.linuxArm32Hfp, 'linuxArm32Hfp') {
-            mavenPublication {
-                artifactId = 'arbor-linuxArm32Hfp'
-            }
-        }
-        fromPreset(presets.linuxMips32, 'linuxMips32') {
-            mavenPublication {
-                artifactId = 'arbor-linuxMips32'
-            }
-        }
-        fromPreset(presets.linuxMipsel32, 'linuxMipsel32') {
-            mavenPublication {
-                artifactId = 'arbor-linuxMipsel32'
-            }
-        }
-        fromPreset(presets.linuxX64, 'linuxX64') {
-            mavenPublication {
-                artifactId = 'arbor-linuxX64'
-            }
-        }
-        fromPreset(presets.wasm32, 'wasm32'){
-            mavenPublication {
-                artifactId = 'arbor-wasm32'
-            }
-        }
-        fromPreset(presets.linuxX64, 'linuxX64'){
-            mavenPublication {
-                artifactId = 'arbor-linuxX64'
-            }
-        }
-        fromPreset(presets.macosX64, 'macosX64'){
-            mavenPublication {
-                artifactId = 'arbor-macosX64'
-            }
-        }
-        fromPreset(presets.mingwX64, 'mingwX64'){
-            mavenPublication {
-                artifactId = 'arbor-mingwX64'
-            }
-        }
-        fromPreset(presets.iosArm64, 'iosArm32'){
-            mavenPublication {
-                artifactId = 'arbor-iosArm32'
-            }
-        }
-        fromPreset(presets.iosArm64, 'iosArm64'){
-            mavenPublication {
-                artifactId = 'arbor-iosArm64'
-            }
-        }
-        fromPreset(presets.iosX64, 'iosX64'){
-            mavenPublication {
-                artifactId = 'arbor-iosX64'
             }
         }
     }
@@ -132,67 +65,6 @@ kotlin {
         jvmTest {
             dependencies {
                 implementation kotlin('test-junit')
-            }
-        }
-        androidNativeArm32Main {
-            dependencies {
-                implementation kotlin('stdlib')
-                //implementation "org.jetbrains.kotlinx:atomicfu-native:$atomicfu_version"
-            }
-        }
-        androidNativeArm64Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        linuxArm32HfpMain {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        linuxMips32Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        linuxMipsel32Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        wasm32Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        linuxX64Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        macosX64Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        mingwX64Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        iosArm32Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        iosArm64Main {
-            dependencies {
-                implementation kotlin('stdlib')
-            }
-        }
-        iosX64Main {
-            dependencies {
-                implementation kotlin('stdlib')
             }
         }
     }
@@ -409,6 +281,7 @@ publishing {
         }
         publications.getByName('metadata') {
             artifact dokkaJavadocCommonJar
+            artifactId = 'metadata'
         }
     }
 
@@ -423,14 +296,10 @@ publishing {
                 password System.getenv('SONATYPE_PASSWORD') ?: ""
             }
         }
-        maven {
-            name = 'test'
-            url "file://${rootProject.buildDir}/localMaven"
-        }
     }
 }
 
-def appendDepNode(Node node, String groupId, String artifactId, String ver, String scope) {
+static def appendDepNode(Node node, String groupId, String artifactId, String ver, String scope) {
     def newNode = node.appendNode('dependency')
     newNode.appendNode('groupId', groupId)
     newNode.appendNode('artifactId', artifactId)
@@ -446,3 +315,7 @@ signing {
 build.dependsOn ':common:android:build', 'jacocoTestReportJvm', 'jacocoTestReportUnified'
 publish.dependsOn build
 publishToMavenLocal.dependsOn build
+
+afterEvaluate {
+    check.dependsOn('detekt')
+}

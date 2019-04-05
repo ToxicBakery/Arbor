@@ -105,7 +105,6 @@ class SeedlingTest {
     @Test
     fun isTopLevelArborCall() {
         assertTrue(createStackTraceElementForClass(Arbor::class.java).isTopLevelArborCall)
-        assertTrue(createStackTraceElementForClass(Arbor.Companion::class.java).isTopLevelArborCall)
         assertTrue(createStackTraceElementForClass(TaggedSeedling::class.java).isTopLevelArborCall)
         assertFalse(createStackTraceElementForClass(Exception::class.java).isTopLevelArborCall)
     }

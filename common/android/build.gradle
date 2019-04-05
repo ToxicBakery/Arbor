@@ -45,7 +45,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-                implementation project(':common')
+                api project(':common')
             }
         }
         androidTest {
@@ -103,3 +103,7 @@ task androidSourcesJar(type: Jar) {
 
 build.dependsOn("dokkaJavadocAndroidJar")
 build.dependsOn("androidSourcesJar")
+
+afterEvaluate {
+    check.dependsOn('detekt')
+}

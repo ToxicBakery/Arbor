@@ -140,6 +140,10 @@ task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
         path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
         platforms = ["JVM"]
     }
+
+    doLast {
+        new File(outputDirectory, 'CNAME').write("arbor.toxicbakery.dev")
+    }
 }
 
 task dokkaCommon(type: org.jetbrains.dokka.gradle.DokkaTask) {

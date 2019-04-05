@@ -60,11 +60,6 @@ JVM
 implementation "com.ToxicBakery.logging:arbor-jvm:1.+"
 ```
 
-Additionally, other multiplatform projects can references the metadata module for common source usage.
-```groovy
-implementation "com.ToxicBakery.logging:arbor-metadata:1.+"
-```
-
 ## Migrating from Timber
 Library migrations can be difficult. I've written a drop in kotlin file that can be placed anywhere in your application for a generally 1:1 mapping of Timber to Arbor. Notably missing is extension functions for string formatting.
 

@@ -4,6 +4,7 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
     id 'org.jetbrains.dokka'
     id 'jacoco'
+    id 'nl.fabianm.kotlin.plugin.generated'
 }
 
 jacoco {

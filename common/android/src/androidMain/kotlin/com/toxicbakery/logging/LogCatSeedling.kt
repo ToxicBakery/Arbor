@@ -2,7 +2,6 @@ package com.toxicbakery.logging
 
 import android.os.Build
 import android.util.Log
-import com.toxicbakery.logging.Seedling.Companion.prettyPrint
 import kotlin.math.min
 
 /**
@@ -11,7 +10,13 @@ import kotlin.math.min
  * before forcing hard breaks. Tagging is automatically implemented by using an exception stack trace to determine
  * the calling code.
  */
-class LogCatSeedling : ISeedling {
+class LogCatSeedling(
+    private val treatAsAndroidN: Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+) : ISeedling {
+
+    private val String.asAndroidTag: String
+        get() = if (treatAsAndroidN || length < MAX_ANDROID_TAG) this
+        else substring(0, MAX_ANDROID_TAG)
 
     /**
      * Tag generation that uses an exception stacktrace to automatically determine the calling class.
@@ -43,12 +48,15 @@ class LogCatSeedling : ISeedling {
         msg: String,
         throwable: Throwable?,
         args: Array<out Any?>?
-    ) = log(
-        level = level,
-        tag = tag.asAndroidTag,
-        msg = if (args == null) msg else msg.format(*args),
-        throwable = throwable
-    )
+    ) {
+        require(level >= Arbor.DEBUG && level <= Arbor.WTF)
+        log(
+            level = level,
+            tag = tag.asAndroidTag,
+            msg = if (args == null) msg else msg.format(*args),
+            throwable = throwable
+        )
+    }
 
     private fun log(
         level: Int,
@@ -56,12 +64,18 @@ class LogCatSeedling : ISeedling {
         msg: String,
         throwable: Throwable?
     ) = if (throwable == null) {
-            if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tag, msg, throwable)
+        if (msg.length <= MAX_ANDROID_MSG) writeLog(level, tag, msg)
             else msg.splitAndLog(level)
-        } else "$msg\n${throwable.prettyPrint()}".splitAndLog(level)
+    } else msg.splitAndLog(level, throwable)
 
-    private fun String.splitAndLog(level: Int) = logCatSplit()
-        .forEach { messageChunk -> writeLog(level, tag, messageChunk, null) }
+    private fun String.splitAndLog(
+        level: Int,
+        throwable: Throwable? = null
+    ) = logCatSplit()
+        .forEachIndexed { idx, messageChunk ->
+            if (idx != 0 || throwable == null) writeLog(level, tag, messageChunk)
+            else writeLog(level, tag, messageChunk, throwable)
+        }
 
     companion object {
         private const val CALL_STACK_INDEX_DIRECT_CALLER = 1
@@ -75,25 +89,30 @@ class LogCatSeedling : ISeedling {
          * actually a few dozen bytes more than this but again, that's unclear.
          */
         internal const val MAX_ANDROID_MSG = 4023
-        private val IS_AT_LEAST_N: Boolean
-            get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
 
         @JvmStatic
-        private val String.asAndroidTag: String
-            get() = if (IS_AT_LEAST_N || length < MAX_ANDROID_TAG) this
-            else substring(0, MAX_ANDROID_TAG)
-
-        @Suppress("ComplexMethod")
-        @JvmStatic
-        internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable?) {
+        internal fun writeLog(level: Int, tag: String, msg: String) {
+            require(level >= Arbor.DEBUG && level <= Arbor.WTF)
             when (level) {
-                Arbor.DEBUG -> if (throwable == null) Log.d(tag, msg) else Log.d(tag, msg, throwable)
-                Arbor.ERROR -> if (throwable == null) Log.e(tag, msg) else Log.e(tag, msg, throwable)
-                Arbor.INFO -> if (throwable == null) Log.i(tag, msg) else Log.i(tag, msg, throwable)
-                Arbor.VERBOSE -> if (throwable == null) Log.v(tag, msg) else Log.v(tag, msg, throwable)
-                Arbor.WARNING -> if (throwable == null) Log.w(tag, msg) else Log.w(tag, msg, throwable)
-                Arbor.WTF -> if (throwable == null) Log.wtf(tag, msg) else Log.wtf(tag, msg, throwable)
-                else -> throw LoggingException("Unsupported log level $level")
+                Arbor.DEBUG -> Log.d(tag, msg)
+                Arbor.ERROR -> Log.e(tag, msg)
+                Arbor.INFO -> Log.i(tag, msg)
+                Arbor.VERBOSE -> Log.v(tag, msg)
+                Arbor.WARNING -> Log.w(tag, msg)
+                Arbor.WTF -> Log.wtf(tag, msg)
+            }
+        }
+
+        @JvmStatic
+        internal fun writeLog(level: Int, tag: String, msg: String, throwable: Throwable) {
+            require(level >= Arbor.DEBUG && level <= Arbor.WTF)
+            when (level) {
+                Arbor.DEBUG -> Log.d(tag, msg, throwable)
+                Arbor.ERROR -> Log.e(tag, msg, throwable)
+                Arbor.INFO -> Log.i(tag, msg, throwable)
+                Arbor.VERBOSE -> Log.v(tag, msg, throwable)
+                Arbor.WARNING -> Log.w(tag, msg, throwable)
+                Arbor.WTF -> Log.wtf(tag, msg, throwable)
             }
         }
 

@@ -31,19 +31,22 @@ class Seedling @JvmOverloads constructor(
         msg: String,
         throwable: Throwable?,
         args: Array<out Any?>?
-    ): Unit = tag.withMessage(msg)
-        .let { taggedMessage ->
-            if (args == null || args.isEmpty()) taggedMessage
-            else taggedMessage.format(*args)
-        }
-        .withThrowable(throwable)
-        .let { message ->
-            when (level) {
-                Arbor.ERROR,
-                Arbor.WTF -> printStreamErr.println(message)
-                else -> printStreamOut.println(message)
+    ) {
+        require(level >= Arbor.DEBUG && level <= Arbor.WTF)
+        tag.withMessage(msg)
+            .let { taggedMessage ->
+                if (args == null || args.isEmpty()) taggedMessage
+                else taggedMessage.format(*args)
             }
-        }
+            .withThrowable(throwable)
+            .let { message ->
+                when (level) {
+                    Arbor.ERROR,
+                    Arbor.WTF -> printStreamErr.println(message)
+                    else -> printStreamOut.println(message)
+                }
+            }
+    }
 
     private fun String.withMessage(msg: String): String =
         if (isEmpty()) msg

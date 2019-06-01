@@ -6,6 +6,7 @@ plugins {
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
     id 'jacoco'
+    id 'nl.fabianm.kotlin.plugin.generated'
 }
 
 jacoco {
@@ -86,7 +87,7 @@ task jacocoTestReportJvm(type: JacocoReport) {
     }
 }
 
-task jacocoTestReportUnified(type: JacocoReport) {
+task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':common:android:build') {
     classDirectories = files(
             "$buildDir/classes/kotlin/common/main",
             "$buildDir/classes/kotlin/jvm/main",
@@ -316,7 +317,7 @@ signing {
     sign publishing.publications
 }
 
-build.dependsOn ':common:android:build', 'jacocoTestReportJvm', 'jacocoTestReportUnified'
+build.dependsOn ':common:android:build', ':common:android:test', 'jacocoTestReportJvm', 'jacocoTestReportUnified'
 publish.dependsOn build
 publishToMavenLocal.dependsOn build
 

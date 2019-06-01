@@ -12,6 +12,7 @@ class Seedling : ISeedling {
         throwable: Throwable?,
         args: Array<out Any?>?
     ) {
+        require(level >= Arbor.DEBUG && level <= Arbor.WTF)
         val message = "$tag$msg"
         val trace = throwable?.trace ?: ""
         when {

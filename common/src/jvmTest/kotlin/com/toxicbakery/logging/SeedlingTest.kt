@@ -36,11 +36,6 @@ class SeedlingTest {
     }
 
     @Test
-    fun getTag() {
-        assertEquals("tag", Arbor.tag("tag").forest.first().tag)
-    }
-
-    @Test
     fun log() {
         Arbor.d("Hello, World")
         assertEquals("$defaultTag: Hello, World\n", bufferOut.toString())
@@ -65,6 +60,19 @@ class SeedlingTest {
     fun log_withTag() {
         Arbor.tag("tag").d("Hello, World")
         assertEquals("tag: Hello, World\n", bufferOut.toString())
+    }
+
+    @Test
+    fun log_withArgs() {
+        Arbor.d("Hello, %s", "World")
+        assertEquals("$defaultTag: Hello, World\n", bufferOut.toString())
+    }
+
+    @Suppress("RemoveRedundantSpreadOperator")
+    @Test
+    fun log_withEmptyArgs() {
+        Arbor.d("Hello, %s", *emptyArray<String>())
+        assertEquals("$defaultTag: Hello, %s\n", bufferOut.toString())
     }
 
     @Test
@@ -105,7 +113,6 @@ class SeedlingTest {
     @Test
     fun isTopLevelArborCall() {
         assertTrue(createStackTraceElementForClass(Arbor::class.java).isTopLevelArborCall)
-        assertTrue(createStackTraceElementForClass(TaggedSeedling::class.java).isTopLevelArborCall)
         assertFalse(createStackTraceElementForClass(Exception::class.java).isTopLevelArborCall)
     }
 

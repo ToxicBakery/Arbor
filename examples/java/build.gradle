@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'kotlin-multiplatform'
 }
 
 sourceCompatibility = 1.8
@@ -10,8 +11,9 @@ repositories {
 }
 
 dependencies {
-    implementation project(':common') // Link to common via project dsl to ensure it's built first
+    implementation "com.ToxicBakery.logging:common-jvm:$version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
+assemble.dependsOn ':common:build', ':common:publishToMavenLocal'

@@ -23,7 +23,7 @@ test-pattern: # Configure exclusions for test sources
     - 'TooGenericExceptionCaught'
 
 build:
-  maxIssues: 1
+  maxIssues: 0
   weights:
   # complexity: 2
   # LongParameterList: 1

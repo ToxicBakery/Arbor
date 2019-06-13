@@ -1,5 +1,6 @@
 package com.toxicbakery.logging
 
+import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +13,13 @@ class BranchTest {
     @BeforeTest
     fun setup() {
         seedling = TestSeedling("tag")
-        branch = Branch(seedlings = setOf(seedling))
+        branch = Branch("tag")
+        Arbor.sow(seedling)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        Arbor.harvest(seedling)
     }
 
     @Test

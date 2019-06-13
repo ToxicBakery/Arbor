@@ -71,7 +71,6 @@ class Seedling @JvmOverloads constructor(
         @JvmStatic
         internal val StackTraceElement.isTopLevelArborCall: Boolean
             get() = className == Arbor::class.java.name
-                    || className == TaggedSeedling::class.java.name
 
     }
 

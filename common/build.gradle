@@ -285,7 +285,6 @@ publishing {
         }
         publications.getByName('metadata') {
             artifact dokkaJavadocCommonJar
-            artifactId = 'metadata'
         }
     }
 

@@ -31,7 +31,7 @@ subprojects {
     String buildNumber = System.getenv('CIRCLE_BUILD_NUM') ?: "0"
 
     group 'com.ToxicBakery.logging'
-    version "1.33.$buildNumber" + (isTag ? "" : "-SNAPSHOT")
+    version "1.34.$buildNumber" + (isTag ? "" : "-SNAPSHOT")
 
     repositories {
         google()

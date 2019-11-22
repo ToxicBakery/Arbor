@@ -4,7 +4,6 @@ plugins {
     id 'io.gitlab.arturbosch.detekt'
     id 'org.jetbrains.dokka'
     id 'jacoco'
-    id 'nl.fabianm.kotlin.plugin.generated'
 }
 
 jacoco {
@@ -16,7 +15,7 @@ tasks.withType(Test) {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         minSdkVersion 15
     }
@@ -53,15 +52,19 @@ kotlin {
             dependencies {
                 implementation project(':common')
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+                implementation "org.mockito:mockito-core:3.1.0"
             }
         }
     }
 }
 
 task jacocoTestReportAndroid(type: JacocoReport) {
-    classDirectories = files("$buildDir/intermediates/packaged-classes/debug")
-    sourceDirectories = files("src/androidMain/kotlin")
-    executionData = fileTree(dir: "$buildDir/jacoco", include: "*.exec")
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    classDirectories.from(files(debugTree))
+    sourceDirectories.from(files("src/androidMain/kotlin"))
+    executionData.from(fileTree(dir: "$buildDir/jacoco", include: "*.exec"))
 
     reports {
         xml.enabled = true
@@ -93,12 +96,12 @@ task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
 }
 
 task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaAndroid) {
-    classifier = 'javadoc'
+    classifier('javadoc')
     from "$buildDir/javadoc/android"
 }
 
 task androidSourcesJar(type: Jar) {
-    classifier = 'sources'
+    classifier('sources')
     from kotlin.sourceSets.androidMain.kotlin.srcDirs
 }
 

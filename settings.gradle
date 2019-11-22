@@ -1,6 +1,9 @@
 enableFeaturePreview('GRADLE_METADATA')
 
-include ':common:android', ':common', ':examples:android', ':examples:java'
+include ':common:android'
+include ':common'
+include ':examples:android'
+include ':examples:java'
 
 project(':examples:android').name = 'android-example'
 project(':examples:java').name = 'java-example'

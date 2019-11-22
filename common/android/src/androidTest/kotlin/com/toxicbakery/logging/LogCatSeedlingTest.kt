@@ -1,118 +1,95 @@
 package com.toxicbakery.logging
 
+import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito
+import org.mockito.Mockito.verify
 
 class LogCatSeedlingTest {
 
+    private lateinit var mockedDelegate: LogDelegate
+
+    @Before
+    fun setup() {
+        mockedDelegate = Mockito.mock(LogDelegate::class.java)
+    }
+
     @Test
     fun log_asN() {
-        val seedling = LogCatSeedling()
-        seedling.log(Arbor.DEBUG, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.ERROR, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.INFO, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.VERBOSE, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.WARNING, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.WTF, seedling.tag, "msg", null, null)
+        val seedling = LogCatSeedling(
+            treatAsAndroidN = true,
+            logDelegate = mockedDelegate
+        )
+        val tag = (1..100).joinToString { "a" }
+        seedling.log(Arbor.DEBUG, tag, "msg", null, null)
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, tag, "msg")
     }
 
     @Test
     fun log_asPreN() {
         val seedling = LogCatSeedling(
-            treatAsAndroidN = false
+            treatAsAndroidN = false,
+            logDelegate = mockedDelegate
         )
-        seedling.log(Arbor.DEBUG, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.ERROR, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.INFO, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.VERBOSE, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.WARNING, seedling.tag, "msg", null, null)
-        seedling.log(Arbor.WTF, seedling.tag, "msg", null, null)
+        val tag = (1..100).joinToString { "a" }
+        seedling.log(Arbor.DEBUG, tag, "msg", null, null)
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, tag.substring(0, 23), "msg")
     }
 
     @Test
     fun log_withThrowable() {
-        val seedling = LogCatSeedling()
-        seedling.log(Arbor.DEBUG, "tag", "msg", Exception(), null)
-        seedling.log(Arbor.ERROR, "tag", "msg", Exception(), null)
-        seedling.log(Arbor.INFO, "tag", "msg", Exception(), null)
-        seedling.log(Arbor.VERBOSE, "tag", "msg", Exception(), null)
-        seedling.log(Arbor.WARNING, "tag", "msg", Exception(), null)
-        seedling.log(Arbor.WTF, "tag", "msg", Exception(), null)
+        val seedling = LogCatSeedling(logDelegate = mockedDelegate)
+        val exception = Exception()
+        seedling.log(Arbor.DEBUG, "tag", "msg", exception, null)
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, "tag", "msg", exception)
     }
 
     @Test
     fun log_withArgs() {
-        val seedling = LogCatSeedling()
-        seedling.log(
-            Arbor.DEBUG,
-            seedling.tag,
-            "msg %s",
-            null,
-            arrayOf("replacement")
-        )
+        val seedling = LogCatSeedling(logDelegate = mockedDelegate)
+        seedling.log(Arbor.DEBUG, seedling.tag, "msg %s", null, arrayOf("replacement"))
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, seedling.tag, "msg replacement")
     }
 
     @Test
-    fun log_withExcessiveTag_asN() {
-        val seedling = LogCatSeedling()
-        seedling.log(
-            Arbor.DEBUG,
-            (1..100).joinToString { "tag" },
-            "msg",
-            null,
-            null
-        )
-    }
-
-    @Test
-    fun log_withExcessiveTag_asPreN() {
-        val seedling = LogCatSeedling(
-            treatAsAndroidN = false
-        )
-        seedling.log(
-            Arbor.DEBUG,
-            (1..100).joinToString { "tag" },
-            "msg",
-            null,
-            null
-        )
+    fun log_withShortTag_asN() {
+        val seedling = LogCatSeedling(logDelegate = mockedDelegate)
+        seedling.log(Arbor.DEBUG, "tag", "msg", null, null)
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, "tag", "msg")
     }
 
     @Test
     fun log_withShortTag_asPreN() {
         val seedling = LogCatSeedling(
-            treatAsAndroidN = false
+            treatAsAndroidN = false,
+            logDelegate = mockedDelegate
         )
-        seedling.log(
-            Arbor.DEBUG,
-            "tag",
-            "msg",
-            null,
-            null
-        )
+        seedling.log(Arbor.DEBUG, "tag", "msg", null, null)
+        verify(mockedDelegate).writeLog(Arbor.DEBUG, "tag", "msg")
     }
 
     @Test
     fun log_withLongMessage() {
-        val seedling = LogCatSeedling()
-        seedling.log(
-            Arbor.DEBUG,
-            seedling.tag,
-            (1..5000).joinToString { "msg" },
-            null,
-            null
-        )
+        val seedling = LogCatSeedling(logDelegate = mockedDelegate)
+        val msg = (1..155).joinToString { ALPHABET }
+        seedling.log(Arbor.DEBUG, seedling.tag, msg, null, null)
+        val verify = verify(mockedDelegate)
+        verify.writeLog(Arbor.DEBUG, seedling.tag, msg.substring(0, 4023))
+        verify.writeLog(Arbor.DEBUG, seedling.tag, msg.substring(4023))
     }
 
     @Test
     fun log_withLongMessageAndNewLines() {
-        val seedling = LogCatSeedling()
-        seedling.log(
-            Arbor.DEBUG,
-            seedling.tag,
-            (1..5000).joinToString { "msg\n" },
-            null,
-            null
-        )
+        val seedling = LogCatSeedling(logDelegate = mockedDelegate)
+        val msg = (1..155).joinToString { "$ALPHABET\n" }
+        seedling.log(Arbor.DEBUG, seedling.tag, msg, null, null)
+        val verify = verify(mockedDelegate)
+        verify.writeLog(Arbor.DEBUG, seedling.tag, (1..138).joinToString { "$ALPHABET\n" }.trim())
+        verify.writeLog(Arbor.DEBUG, seedling.tag, (1..17).joinToString { "$ALPHABET\n" })
+    }
+
+    companion object {
+        private const val ALPHABET = "abcdefghijklmnopqrstuvwxyz"
     }
 
 }

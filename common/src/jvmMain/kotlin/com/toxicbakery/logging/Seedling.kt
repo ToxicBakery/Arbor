@@ -1,8 +1,15 @@
 package com.toxicbakery.logging
 
 import java.io.PrintStream
-import java.util.*
 
+/**
+ * Basic logger that prints [Error] and [WTF] messages to the [System.err] stream. All other logs are printed to the
+ * [System.out] stream. Messages are line printed in the format of `TAG: Message`.
+ *
+ * ```
+ * Arbor.sow(Seedling())
+ * ```
+ */
 class Seedling @JvmOverloads constructor(
     private val printStreamErr: PrintStream = System.err,
     private val printStreamOut: PrintStream = System.out,
@@ -39,13 +46,13 @@ class Seedling @JvmOverloads constructor(
                 else taggedMessage.format(*args)
             }
             .withThrowable(throwable)
-            .let { message ->
-                when (level) {
-                    Arbor.ERROR,
-                    Arbor.WTF -> printStreamErr.println(message)
-                    else -> printStreamOut.println(message)
-                }
-            }
+            .let { message -> logMessage(message, level) }
+    }
+
+    private fun logMessage(message: String, level: Int) = when (level) {
+        Arbor.ERROR,
+        Arbor.WTF -> printStreamErr.println(message)
+        else -> printStreamOut.println(message)
     }
 
     private fun String.withMessage(msg: String): String =

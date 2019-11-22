@@ -1,7 +1,6 @@
 plugins {
     id 'kotlin-multiplatform'
     id 'maven-publish'
-    id 'com.github.salomonbrys.gradle.kotlin.js.mpp-tests.node'
     id 'signing'
     id 'org.jetbrains.dokka'
     id 'io.gitlab.arturbosch.detekt'
@@ -12,9 +11,6 @@ jacoco {
     toolVersion = jacoco_version
 }
 
-// workaround for https://youtrack.jetbrains.com/issue/KT-27170
-configurations.create("compileClasspath")
-
 kotlin {
     targets {
         fromPreset(presets.jvm, 'jvm') {
@@ -24,11 +20,6 @@ kotlin {
         }
         fromPreset(presets.js, 'js') {
             tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
-            kotlinJsNodeTests {
-                thisTarget(js) {
-                    engine = mocha
-                }
-            }
             mavenPublication {
                 artifactId = 'arbor-js'
             }
@@ -71,14 +62,19 @@ kotlin {
 }
 
 task jacocoTestReportJvm(type: JacocoReport) {
-    classDirectories = files(
-            "$buildDir/classes/kotlin/common/main",
-            "$buildDir/classes/kotlin/jvm/main")
-    sourceDirectories = files(
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
+    def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
+
+    classDirectories.from(files(
+            commonTree,
+            jvmTree
+    ))
+    sourceDirectories.from(files(
             "src/commonMain/kotlin",
-            "src/jvmMain/kotlin")
-    //noinspection ChangeToOperator
-    executionData = files("$buildDir/jacoco/jvmTest.exec")
+            "src/jvmMain/kotlin"
+    ))
+    executionData.from(files("$buildDir/jacoco/jvmTest.exec"))
 
     reports {
         xml.enabled = true
@@ -87,18 +83,26 @@ task jacocoTestReportJvm(type: JacocoReport) {
 }
 
 task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':common:android:build') {
-    classDirectories = files(
-            "$buildDir/classes/kotlin/common/main",
-            "$buildDir/classes/kotlin/jvm/main",
-            "android/build/intermediates/packaged-classes/debug")
-    sourceDirectories = files(
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
+    def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
+    def androidTree = fileTree(dir: "android/build/tmp/kotlin-classes/debug", excludes: fileFilter)
+
+    classDirectories.from(files(
+            commonTree,
+            jvmTree,
+            androidTree
+    ))
+    sourceDirectories.from(files(
             "src/commonMain/kotlin",
             "src/jvmMain/kotlin",
-            "android/src/androidMain/kotlin")
+            "android/src/androidMain/kotlin"
+    ))
     //noinspection ChangeToOperator
-    executionData = files(
-            "$buildDir/jacoco/jvmTest.exec")
-            .plus(fileTree(dir: "android/build/jacoco", include: "*.exec"))
+    executionData.from(files(
+            "$buildDir/jacoco/jvmTest.exec",
+            fileTree(dir: "android/build/jacoco", include: "*.exec")
+    ))
 
     reports {
         xml.enabled = true
@@ -315,7 +319,10 @@ signing {
     sign publishing.publications
 }
 
-build.dependsOn ':common:android:build', ':common:android:test', 'jacocoTestReportJvm', 'jacocoTestReportUnified'
+build.dependsOn ':common:android:build'
+build.dependsOn ':common:android:test'
+build.dependsOn 'jacocoTestReportJvm'
+build.dependsOn 'jacocoTestReportUnified'
 publish.dependsOn build
 publishToMavenLocal.dependsOn build
 

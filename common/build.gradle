@@ -82,11 +82,11 @@ task jacocoTestReportJvm(type: JacocoReport) {
     }
 }
 
-task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':common:android:build') {
+task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build') {
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
     def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
-    def androidTree = fileTree(dir: "android/build/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def androidTree = fileTree(dir: "${project(':android').buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
 
     classDirectories.from(files(
             commonTree,
@@ -96,12 +96,12 @@ task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':common:android:bui
     sourceDirectories.from(files(
             "src/commonMain/kotlin",
             "src/jvmMain/kotlin",
-            "android/src/androidMain/kotlin"
+            "${project(':android').projectDir}/src/androidMain/kotlin"
     ))
     //noinspection ChangeToOperator
     executionData.from(files(
             "$buildDir/jacoco/jvmTest.exec",
-            fileTree(dir: "android/build/jacoco", include: "*.exec")
+            fileTree(dir: "${project(':android').buildDir}/jacoco", include: "*.exec")
     ))
 
     reports {
@@ -133,7 +133,7 @@ task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
         platforms = ["Common"]
     }
     sourceRoot {
-        path = "common/android/src/androidMain/kotlin"
+        path = "${project(':android').projectDir}/src/androidMain/kotlin"
         platforms = ["Android"]
     }
     sourceRoot {
@@ -192,24 +192,24 @@ task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
 }
 
 task emptySourcesJar(type: Jar) {
-    classifier = 'sources'
+    classifier('sources')
 }
 task emptyJavadocJar(type: Jar) {
-    classifier = 'javadoc'
+    classifier('javadoc')
 }
 
 task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
-    classifier = 'javadoc'
+    classifier('javadoc')
     from "$buildDir/javadoc/common"
 }
 
 task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
-    classifier = 'javadoc'
+    classifier('javadoc')
     from "$buildDir/javadoc/js"
 }
 
 task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
-    classifier = 'javadoc'
+    classifier('javadoc')
     from "$buildDir/javadoc/jvm"
 }
 
@@ -255,24 +255,21 @@ publishing {
         }
     }
 
-    task dokkaJavadocAndroidJar(type: Jar, dependsOn: project("android").tasks.find { it.name == 'build' }) {
-        classifier = 'javadoc'
-        from "android/build/libs/android-$version-javadoc.jar"
+    task dokkaJavadocAndroidJar(type: Jar, dependsOn: project(":android").tasks.find { it.name == 'build' }) {
+        classifier('javadoc')
+        from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
     }
 
     task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from "android/build/libs/android-$version-sources.jar"
+        classifier('sources')
+        from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
     }
-
-    publish.dependsOn ':common:android:build'
-    publishToMavenLocal.dependsOn ':common:android:build'
 
     afterEvaluate {
         publications {
             maven(MavenPublication) {
                 artifactId "arbor-android"
-                artifact 'android/build/outputs/aar/android-release.aar'
+                artifact "${project(':android').buildDir}/outputs/aar/android-release.aar"
                 artifact dokkaJavadocAndroidJar
                 artifact androidSourcesJar
             }
@@ -319,12 +316,8 @@ signing {
     sign publishing.publications
 }
 
-build.dependsOn ':common:android:build'
-build.dependsOn ':common:android:test'
 build.dependsOn 'jacocoTestReportJvm'
 build.dependsOn 'jacocoTestReportUnified'
-publish.dependsOn build
-publishToMavenLocal.dependsOn build
 
 afterEvaluate {
     check.dependsOn('detekt')

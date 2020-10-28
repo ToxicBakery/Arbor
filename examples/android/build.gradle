@@ -31,7 +31,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "io.reactivex.rxjava3:rxjava:3.0.0-RC5"
-    implementation project(':common:android')
+    implementation project(':android')
 
     testImplementation 'junit:junit:4.12'
 

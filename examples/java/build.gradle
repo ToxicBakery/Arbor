@@ -11,7 +11,8 @@ repositories {
 }
 
 dependencies {
-    implementation "com.ToxicBakery.logging:common-jvm:$version"
+    //implementation "com.ToxicBakery.logging:common-jvm:$version"
+    implementation project(':common')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }

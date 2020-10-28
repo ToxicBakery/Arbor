@@ -1,7 +1,7 @@
 enableFeaturePreview('GRADLE_METADATA')
 
-include ':common:android'
 include ':common'
+include ':android'
 include ':examples:android'
 include ':examples:java'
 

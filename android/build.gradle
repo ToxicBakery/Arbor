@@ -76,7 +76,7 @@ build.dependsOn jacocoTestReportAndroid
 detekt {
     input = files("src/androidMain/kotlin")
     filters = ".*/resources/.*,.*/build/.*"
-    config = files("../detekt.yml")
+    config = project(':common').files("detekt.yml")
     reports.xml.enabled = false
 }
 
@@ -85,10 +85,6 @@ task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
     kotlinTasks { [] }
     outputFormat = 'html'
     outputDirectory = "$buildDir/javadoc/android"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
-    }
     sourceRoot {
         path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
         platforms = ["Android"]

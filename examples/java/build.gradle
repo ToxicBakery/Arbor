@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'application'
     id 'kotlin-multiplatform'
 }
 
@@ -10,11 +11,18 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    //implementation "com.ToxicBakery.logging:common-jvm:$version"
-    implementation project(':common')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+kotlin {
+    jvm {
+        dependencies {
+            implementation "com.ToxicBakery.logging:common-jvm:$version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+            testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+        }
+    }
+}
+
+application {
+    mainClass = "com.ToxicBakery.logging.Main"
 }
 
 assemble.dependsOn ':common:build', ':common:publishToMavenLocal'

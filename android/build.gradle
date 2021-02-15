@@ -15,7 +15,7 @@ tasks.withType(Test) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     defaultConfig {
         minSdkVersion 15
     }
@@ -45,14 +45,14 @@ kotlin {
         androidMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-                api project(':common')
+                implementation project(':common')
             }
         }
         androidTest {
             dependencies {
                 implementation project(':common')
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-                implementation "org.mockito:mockito-core:3.1.0"
+                implementation "org.mockito:mockito-core:3.5.15"
             }
         }
     }
@@ -80,18 +80,7 @@ detekt {
     reports.xml.enabled = false
 }
 
-task dokkaAndroid(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Android"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/android"
-    sourceRoot {
-        path = kotlin.sourceSets.androidMain.kotlin.srcDirs[0]
-        platforms = ["Android"]
-    }
-}
-
-task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaAndroid) {
+task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {
     classifier('javadoc')
     from "$buildDir/javadoc/android"
 }

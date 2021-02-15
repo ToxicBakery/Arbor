@@ -12,17 +12,23 @@ jacoco {
 }
 
 kotlin {
-    targets {
-        fromPreset(presets.jvm, 'jvm') {
-            mavenPublication {
-                artifactId = 'arbor-jvm'
+    jvm {
+        mavenPublication {
+            artifactId = 'arbor-jvm'
+        }
+    }
+
+    js {
+        browser {
+            testTask {
+                // Skip if CI
+                enabled = "$System.env.CI".isEmpty()
             }
         }
-        fromPreset(presets.js, 'js') {
-            tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
-            mavenPublication {
-                artifactId = 'arbor-js'
-            }
+        nodejs()
+        tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
+        mavenPublication {
+            artifactId = 'arbor-js'
         }
     }
 
@@ -61,7 +67,11 @@ kotlin {
     }
 }
 
-task jacocoTestReportJvm(type: JacocoReport) {
+dependencies {
+    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.20")
+}
+
+task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
     def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
@@ -82,7 +92,7 @@ task jacocoTestReportJvm(type: JacocoReport) {
     }
 }
 
-task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build') {
+task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build', group: 'jacoco') {
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
     def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
@@ -123,92 +133,37 @@ detekt {
     reports.xml.enabled = false
 }
 
-task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Common", "JS", "JVM"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "${project.projectDir}/gh-pages"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
+task cleanGhPages(type: Delete, group: 'build') {
+    delete fileTree("gh-pages") {
+        include '**'
+        exclude 'CNAME'
+        exclude 'index.html'
     }
-    sourceRoot {
-        path = "${project(':android').projectDir}/src/androidMain/kotlin"
-        platforms = ["Android"]
-    }
-    sourceRoot {
-        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
-        platforms = ["JS"]
-    }
-    sourceRoot {
-        path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
-        platforms = ["JVM"]
-    }
-
-    doLast {
-        new File(outputDirectory, 'CNAME').write("arbor.toxicbakery.dev")
-    }
+    tasks.getByName("clean").dependsOn(cleanGhPages)
 }
 
-task dokkaCommon(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["Common"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/common"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
-    }
+task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask, group: 'documentation') {
+    outputDirectory = file("${project.projectDir}/gh-pages")
 }
 
-task dokkaJs(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["JS", "Common"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/js"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
-    }
-    sourceRoot {
-        path = kotlin.sourceSets.jsMain.kotlin.srcDirs[0]
-        platforms = ["JS"]
-    }
-}
-
-task dokkaJvm(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    impliedPlatforms = ["JVM", "Common"]
-    kotlinTasks { [] }
-    outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc/jvm"
-    sourceRoot {
-        path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0]
-        platforms = ["Common"]
-    }
-    sourceRoot {
-        path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0]
-        platforms = ["JVM"]
-    }
-}
-
-task emptySourcesJar(type: Jar) {
+task emptySourcesJar(type: Jar, group: 'publishing') {
     classifier('sources')
 }
-task emptyJavadocJar(type: Jar) {
+task emptyJavadocJar(type: Jar, group: 'publishing') {
     classifier('javadoc')
 }
 
-task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaCommon) {
+task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
     classifier('javadoc')
     from "$buildDir/javadoc/common"
 }
 
-task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaJs) {
+task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
     classifier('javadoc')
     from "$buildDir/javadoc/js"
 }
 
-task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaJvm) {
+task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
     classifier('javadoc')
     from "$buildDir/javadoc/jvm"
 }
@@ -255,12 +210,16 @@ publishing {
         }
     }
 
-    task dokkaJavadocAndroidJar(type: Jar, dependsOn: project(":android").tasks.find { it.name == 'build' }) {
+    task dokkaJavadocAndroidJar(
+            type: Jar,
+            dependsOn: project(":android").tasks.find { it.name == 'build' },
+            group: 'publishing'
+    ) {
         classifier('javadoc')
         from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
     }
 
-    task androidSourcesJar(type: Jar) {
+    task androidSourcesJar(type: Jar, group: 'publishing') {
         classifier('sources')
         from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
     }
@@ -281,10 +240,6 @@ publishing {
             artifact dokkaJavadocJvmJar
         }
         publications.getByName('kotlinMultiplatform') {
-            artifact dokkaJavadocCommonJar
-            artifact emptySourcesJar
-        }
-        publications.getByName('metadata') {
             artifact dokkaJavadocCommonJar
         }
     }

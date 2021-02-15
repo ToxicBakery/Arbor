@@ -1,5 +1,28 @@
 package com.toxicbakery.logging
 
+import com.toxicbakery.logging.Arbor.DEBUG
+import com.toxicbakery.logging.Arbor.ERROR
+import com.toxicbakery.logging.Arbor.INFO
+import com.toxicbakery.logging.Arbor.VERBOSE
+import com.toxicbakery.logging.Arbor.WARNING
+import com.toxicbakery.logging.Arbor.WTF
+import kotlin.js.Console
+
+/**
+ * Basic logger that prints messages to the JavaScript Console. Levels are mapped as:
+ *
+ * [Arbor.DEBUG] -> [Console.log]
+ *
+ * [Arbor.INFO] -> [Console.info]
+ *
+ * [Arbor.VERBOSE] -> [Console.info]
+ *
+ * [Arbor.WARNING] -> [Console.warn]
+ *
+ * [Arbor.ERROR] -> [Console.error]
+ *
+ * [Arbor.WTF] -> [Console.error]
+ */
 class Seedling : ISeedling {
 
     override val tag: String
@@ -12,20 +35,40 @@ class Seedling : ISeedling {
         throwable: Throwable?,
         args: Array<out Any?>?
     ) {
-        require(level >= Arbor.DEBUG && level <= Arbor.WTF)
+        require(level >= DEBUG && level <= Arbor.WTF)
         val message = "$tag$msg"
-        val trace = throwable?.trace ?: ""
-        when {
-            message.isEmpty() && trace.isEmpty() -> return
-            message.isEmpty() -> println(trace)
-            else -> println("$message\n$trace")
+        if (message.isEmpty() && throwable == null) return
+        if (throwable == null) log(level, message)
+        else logWithThrowable(level, throwable, message)
+    }
+
+    private fun log(
+        level: Int,
+        message: String
+    ) {
+        when (level) {
+            DEBUG -> console.log(message)
+            INFO,
+            VERBOSE -> console.info(message)
+            WARNING -> console.warn(message)
+            ERROR,
+            WTF -> console.error(message)
         }
     }
 
-    /**
-     * Print a trace of the exception by printing the message and each wrapped exceptions message.
-     */
-    private val Throwable.trace: String
-        get() = (message ?: "") + (cause?.let { throwable -> "\n${throwable.trace}" })
+    private fun logWithThrowable(
+        level: Int,
+        throwable: Throwable,
+        message: String
+    ) {
+        when (level) {
+            DEBUG -> console.log(throwable, message)
+            INFO,
+            VERBOSE -> console.info(throwable, message)
+            WARNING -> console.warn(throwable, message)
+            ERROR,
+            WTF -> console.error(throwable, message)
+        }
+    }
 
 }

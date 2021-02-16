@@ -67,10 +67,6 @@ kotlin {
     }
 }
 
-dependencies {
-    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.20")
-}
-
 task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
@@ -144,6 +140,13 @@ task cleanGhPages(type: Delete, group: 'build') {
 
 task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask, group: 'documentation') {
     outputDirectory = file("${project.projectDir}/gh-pages")
+    dokkaSourceSets {
+        register("android") {
+            displayName.set("Android")
+            platform.set(org.jetbrains.dokka.Platform.jvm)
+            sourceRoots.from(project(":android").kotlin.sourceSets.getByName("androidMain").kotlin.srcDirs)
+        }
+    }
 }
 
 task emptySourcesJar(type: Jar, group: 'publishing') {

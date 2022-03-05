@@ -67,6 +67,16 @@ kotlin {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if ("org.jacoco" == requested.group) {
+                useVersion("0.8.7")
+            }
+        }
+    }
+}
+
 task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
@@ -119,14 +129,13 @@ task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build', gr
 }
 
 detekt {
+    buildUponDefaultConfig = true
     input = files(
             "src/commonMain/kotlin",
             "src/jsMain/kotlin",
             "src/jvmMain/kotlin",
     )
-    filters = ".*/resources/.*,.*/build/.*"
     config = files("detekt.yml")
-    reports.xml.enabled = false
 }
 
 task cleanGhPages(type: Delete, group: 'build') {

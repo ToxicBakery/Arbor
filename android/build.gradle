@@ -10,12 +10,8 @@ jacoco {
     toolVersion = jacoco_version
 }
 
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-}
-
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         minSdkVersion 15
     }
@@ -26,6 +22,22 @@ android {
     }
     testOptions {
         unitTests.returnDefaultValues = true
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+                excludes = ['jdk.internal.*']       //This line
+            }
+        }
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        eachDependency {
+            if ("org.jacoco" == requested.group) {
+                useVersion("0.8.7")
+            }
+        }
     }
 }
 
@@ -74,10 +86,9 @@ task jacocoTestReportAndroid(type: JacocoReport) {
 build.dependsOn jacocoTestReportAndroid
 
 detekt {
+    buildUponDefaultConfig = true
     input = files("src/androidMain/kotlin")
-    filters = ".*/resources/.*,.*/build/.*"
     config = project(':common').files("detekt.yml")
-    reports.xml.enabled = false
 }
 
 task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {

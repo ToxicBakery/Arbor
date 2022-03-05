@@ -21,7 +21,7 @@ class LogCatSeedling(
     /**
      * Tag generation that uses an exception stacktrace to automatically determine the calling class.
      */
-    @Suppress("MagicNumber")
+    @Suppress("MagicNumber", "ThrowingExceptionsWithoutMessageOrCause")
     override val tag: String
         get() = Exception()
             .stackTrace

@@ -26,6 +26,7 @@ class Seedling @JvmOverloads constructor(
                     .last()
             }
 
+    @Suppress("ThrowingExceptionsWithoutMessageOrCause")
     override val tag: String
         get() = Exception()
             .stackTrace

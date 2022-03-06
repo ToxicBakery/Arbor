@@ -1,9 +1,11 @@
+//file:noinspection GroovyAssignabilityCheck
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+
 buildscript {
     ext.kotlin_version = '1.6.10'
     ext.dokka_version = '1.4.20'
     ext.jacoco_version = '0.8.5'
     repositories {
-        mavenLocal()
         google()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
@@ -22,10 +24,16 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     google()
     mavenCentral()
     maven { url "https://plugins.gradle.org/m2/" }
+}
+
+// Work around for mac based builds which are only supported in NPM 16 and newer
+// https://youtrack.jetbrains.com/issue/KT-49109
+rootProject.plugins.withType(Class.forName("org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin")) {
+    rootProject.extensions.getByType(NodeJsRootExtension.class)
+            .nodeVersion = "16.0.0"
 }
 
 def getGitCommitCount() {
@@ -44,7 +52,7 @@ subprojects {
     final buildNumber = getGitCommitCount() ?: "0"
 
     group 'com.ToxicBakery.logging'
-    version "1.36.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
+    version "1.37.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
 
     repositories {
         google()

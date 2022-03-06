@@ -1,9 +1,6 @@
 package com.toxicbakery.logging
 
-import kotlin.test.AfterTest
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.*
 
 class BranchTest {
 
@@ -20,6 +17,38 @@ class BranchTest {
     @AfterTest
     fun tearDown() {
         Arbor.harvest(seedling)
+    }
+
+    @Test
+    fun notEqual() {
+        assertFalse(branch.equals(null))
+    }
+
+    @Test
+    fun notEqualWrongType() {
+        assertFalse(branch.equals(""))
+    }
+
+    @Test
+    fun notEqualTag() {
+        assertNotEquals(branch, Branch(tag = "test"))
+    }
+
+    @Test
+    fun equal() {
+        assertEquals(branch, branch)
+    }
+
+    @Test
+    fun hash() {
+        assertEquals(branch.hashCode(), "tag".hashCode())
+    }
+
+    @Test
+    fun emptyTag() {
+        val emptyTagBranch = Branch("")
+        emptyTagBranch.d("msg")
+        assertEquals("${Arbor.DEBUG} tag msg", seedling.log)
     }
 
     @Test

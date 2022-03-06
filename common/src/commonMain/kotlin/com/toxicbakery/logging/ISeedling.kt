@@ -21,4 +21,13 @@ interface ISeedling {
         args: Array<out Any?>? = null
     )
 
+    /**
+     * A request to perform logging.
+     */
+    fun log(
+        level: Int,
+        tag: String,
+        msg: () -> String
+    ) = log(level, tag, msg())
+
 }

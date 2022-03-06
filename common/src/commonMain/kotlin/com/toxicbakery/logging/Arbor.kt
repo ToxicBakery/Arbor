@@ -60,12 +60,16 @@ object Arbor {
 
     /**
      * Sow a seedling into the forest. Logs will call seedlings in the order they have been sown.
+     *
+     * @return true if added, false if previously added
      */
     @JvmStatic
     fun sow(seedling: ISeedling) = perennial.add(seedling)
 
     /**
      * Harvest a seedling from the forest.
+     *
+     * @return true if removed
      */
     @JvmStatic
     fun harvest(seedling: ISeedling) = perennial.remove(seedling)
@@ -81,6 +85,12 @@ object Arbor {
      */
     @JvmStatic
     fun d(msg: String) = taglessBranch.d(msg)
+
+    /**
+     * Log a debug message.
+     */
+    @JvmStatic
+    fun d(msg: () -> String) = taglessBranch.d(msg)
 
     /**
      * Log a debug message.
@@ -111,6 +121,12 @@ object Arbor {
      * Log a verbose message.
      */
     @JvmStatic
+    fun v(msg: () -> String) = taglessBranch.v(msg)
+
+    /**
+     * Log a verbose message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun v(throwable: Throwable, msg: String = "") = taglessBranch.v(throwable, msg)
 
@@ -131,6 +147,12 @@ object Arbor {
      */
     @JvmStatic
     fun i(msg: String) = taglessBranch.i(msg)
+
+    /**
+     * Log an info message.
+     */
+    @JvmStatic
+    fun i(msg: () -> String) = taglessBranch.i(msg)
 
     /**
      * Log an info message.
@@ -161,6 +183,12 @@ object Arbor {
      * Log a warning message.
      */
     @JvmStatic
+    fun w(msg: () -> String) = taglessBranch.w(msg)
+
+    /**
+     * Log a warning message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun w(throwable: Throwable, msg: String = "") = taglessBranch.w(throwable, msg)
 
@@ -181,6 +209,12 @@ object Arbor {
      */
     @JvmStatic
     fun e(msg: String) = taglessBranch.e(msg)
+
+    /**
+     * Log an error message.
+     */
+    @JvmStatic
+    fun e(msg: () -> String) = taglessBranch.e(msg)
 
     /**
      * Log an error message.
@@ -211,6 +245,12 @@ object Arbor {
      * Log a wtf message.
      */
     @JvmStatic
+    fun wtf(msg: () -> String) = taglessBranch.wtf(msg)
+
+    /**
+     * Log a wtf message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun wtf(throwable: Throwable, msg: String = "") = taglessBranch.wtf(throwable, msg)
 
@@ -226,4 +266,32 @@ object Arbor {
     @JvmStatic
     fun wtf(throwable: Throwable, msg: String, vararg args: Any?) = taglessBranch.wtf(throwable, msg, args)
 
+}
+
+enum class LogLevel { D, V, I, W, E, WTF }
+
+private val defaultBranch: Branch = Arbor.tag("2143fef6-18e0-4341-a1de-b043ba5e32cd")
+
+fun arbor(
+    logLevel: LogLevel = LogLevel.D,
+    tag: Branch = defaultBranch,
+    message: () -> String
+) = if (tag == defaultBranch) {
+    when (logLevel) {
+        LogLevel.D -> Arbor.d(message)
+        LogLevel.V -> Arbor.v(message)
+        LogLevel.I -> Arbor.i(message)
+        LogLevel.W -> Arbor.w(message)
+        LogLevel.E -> Arbor.e(message)
+        LogLevel.WTF -> Arbor.wtf(message)
+    }
+} else {
+    when (logLevel) {
+        LogLevel.D -> tag.d(message)
+        LogLevel.V -> tag.v(message)
+        LogLevel.I -> tag.i(message)
+        LogLevel.W -> tag.w(message)
+        LogLevel.E -> tag.e(message)
+        LogLevel.WTF -> tag.wtf(message)
+    }
 }

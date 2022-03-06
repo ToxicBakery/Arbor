@@ -13,12 +13,15 @@ class Branch internal constructor(private val tag: String = "") {
 
     override fun hashCode(): Int = tag.hashCode()
 
+    private fun determineTag(seedling: ISeedling): String =
+        if (tagIsBlank) seedling.tag else tag
+
     /**
      * Log a debug message.
      */
     fun d(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg)
         }
 
     /**
@@ -26,7 +29,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun d(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg)
         }
 
     /**
@@ -34,7 +37,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun d(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -42,7 +45,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun d(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -50,7 +53,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun d(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg, throwable, args)
         }
 
     /**
@@ -58,7 +61,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun v(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg)
         }
 
     /**
@@ -66,7 +69,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun v(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg)
         }
 
     /**
@@ -74,7 +77,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun v(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -82,7 +85,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun v(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -90,7 +93,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun v(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg, throwable, args)
         }
 
     /**
@@ -98,7 +101,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun i(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.INFO, determineTag(seedling), msg)
         }
 
     /**
@@ -106,7 +109,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun i(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.INFO, determineTag(seedling), msg)
         }
 
     /**
@@ -114,7 +117,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun i(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.INFO, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -122,7 +125,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun i(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.INFO, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -130,7 +133,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun i(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.INFO, determineTag(seedling), msg, throwable, args)
         }
 
     /**
@@ -138,7 +141,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun w(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg)
         }
 
     /**
@@ -146,7 +149,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun w(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg)
         }
 
     /**
@@ -154,7 +157,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun w(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -162,7 +165,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun w(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -170,7 +173,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun w(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg, throwable, args)
         }
 
     /**
@@ -178,7 +181,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun e(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg)
         }
 
     /**
@@ -186,7 +189,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun e(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg)
         }
 
     /**
@@ -194,7 +197,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun e(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -202,7 +205,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun e(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -210,7 +213,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun e(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg, throwable, args)
         }
 
     /**
@@ -218,7 +221,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun wtf(msg: String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.WTF, determineTag(seedling), msg)
         }
 
     /**
@@ -226,7 +229,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun wtf(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg)
+            seedling.log(Arbor.WTF, determineTag(seedling), msg)
         }
 
     /**
@@ -234,7 +237,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun wtf(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg, throwable)
+            seedling.log(Arbor.WTF, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -242,7 +245,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun wtf(msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg, null, args)
+            seedling.log(Arbor.WTF, determineTag(seedling), msg, null, args)
         }
 
     /**
@@ -250,7 +253,7 @@ class Branch internal constructor(private val tag: String = "") {
      */
     fun wtf(throwable: Throwable, msg: String, args: Array<out Any?>?) = Arbor.forest
         .forEach { seedling ->
-            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg, throwable, args)
+            seedling.log(Arbor.WTF, determineTag(seedling), msg, throwable, args)
         }
 
 }

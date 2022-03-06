@@ -26,7 +26,7 @@ interface ISeedling {
      */
     fun log(
         level: Int,
-        tag: String = "",
+        tag: String,
         msg: () -> String
     ) = log(level, tag, msg())
 

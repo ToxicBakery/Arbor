@@ -1,8 +1,7 @@
 package com.toxicbakery.logging
 
-import kotlin.test.BeforeTest
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import com.toxicbakery.logging.LogLevel.*
+import kotlin.test.*
 
 class ArborTest {
 
@@ -13,9 +12,15 @@ class ArborTest {
     }
 
     @Test
-    fun testGetForest() {
+    fun testSowForest() {
         Arbor.sow(TestSeedling())
         assertEquals(1, Arbor.forest.size)
+    }
+
+    @Test
+    fun testSowForestDuplicate() {
+        assertTrue(Arbor.sow(TestSeedling()))
+        assertFalse(Arbor.sow(TestSeedling()))
     }
 
     @Test
@@ -23,6 +28,11 @@ class ArborTest {
         Arbor.sow(TestSeedling())
         Arbor.harvest(TestSeedling())
         assertEquals(0, Arbor.forest.size)
+    }
+
+    @Test
+    fun testHarvestDoesNotExist() {
+        assertFalse(Arbor.harvest(TestSeedling()))
     }
 
     @Test
@@ -271,6 +281,118 @@ class ArborTest {
         Arbor.sow(seedling)
         Arbor.wtf("msg", "")
         assertEquals("${Arbor.WTF}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionD() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor { "msg" }
+        assertEquals("${Arbor.DEBUG}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionD1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(tag = tag) { "msg" }
+        assertEquals("${Arbor.DEBUG} tag msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionV() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor(V) { "msg" }
+        assertEquals("${Arbor.VERBOSE}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionV1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(V, tag) { "msg" }
+        assertEquals("${Arbor.VERBOSE} tag msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionI() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor(I) { "msg" }
+        assertEquals("${Arbor.INFO}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionI1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(I, tag) { "msg" }
+        assertEquals("${Arbor.INFO} tag msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionW() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor(W) { "msg" }
+        assertEquals("${Arbor.WARNING}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionW1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(W, tag) { "msg" }
+        assertEquals("${Arbor.WARNING} tag msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionE() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor(E) { "msg" }
+        assertEquals("${Arbor.ERROR}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionE1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(E, tag) { "msg" }
+        assertEquals("${Arbor.ERROR} tag msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionWtf() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        arbor(WTF) { "msg" }
+        assertEquals("${Arbor.WTF}  msg", seedling.log)
+    }
+
+    @Test
+    fun testArborExtensionWtf1() {
+        val seedling = TestSeedling()
+        Arbor.sow(seedling)
+        val tag = Arbor.tag("tag")
+        arbor(WTF, tag) { "msg" }
+        assertEquals("${Arbor.WTF} tag msg", seedling.log)
+    }
+
+    @Test
+    fun validateMessagesNotEvaluated() {
+        var flag = false
+        arbor {
+            flag = true
+            return@arbor "test"
+        }
+        assertFalse(flag)
     }
 
 }

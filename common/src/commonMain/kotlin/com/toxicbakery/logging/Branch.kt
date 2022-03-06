@@ -8,10 +8,23 @@ class Branch internal constructor(private val tag: String = "") {
 
     private val tagIsBlank: Boolean = tag.isBlank()
 
+    override fun equals(other: Any?): Boolean =
+        other is Branch && other.tag == tag
+
+    override fun hashCode(): Int = tag.hashCode()
+
     /**
      * Log a debug message.
      */
     fun d(msg: String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log a debug message.
+     */
+    fun d(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.DEBUG, if (tagIsBlank) seedling.tag else tag, msg)
         }
@@ -51,6 +64,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log a verbose message.
      */
+    fun v(msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log a verbose message.
+     */
     fun v(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.VERBOSE, if (tagIsBlank) seedling.tag else tag, msg, throwable)
@@ -76,6 +97,14 @@ class Branch internal constructor(private val tag: String = "") {
      * Log an info message.
      */
     fun i(msg: String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log an info message.
+     */
+    fun i(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.INFO, if (tagIsBlank) seedling.tag else tag, msg)
         }
@@ -115,6 +144,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log a warning message.
      */
+    fun w(msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log a warning message.
+     */
     fun w(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.WARNING, if (tagIsBlank) seedling.tag else tag, msg, throwable)
@@ -147,6 +184,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log an error message.
      */
+    fun e(msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log an error message.
+     */
     fun e(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.ERROR, if (tagIsBlank) seedling.tag else tag, msg, throwable)
@@ -172,6 +217,14 @@ class Branch internal constructor(private val tag: String = "") {
      * Log a wtf message.
      */
     fun wtf(msg: String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg)
+        }
+
+    /**
+     * Log a wtf message.
+     */
+    fun wtf(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.WTF, if (tagIsBlank) seedling.tag else tag, msg)
         }

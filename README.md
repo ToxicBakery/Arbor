@@ -42,6 +42,25 @@ Log tagging is automatic on Android but can be easily overridden.
 Arbor.tag("Custom Tag").i("My Log with a tag.")
 ```
 
+##### Kotlin Extensions
+While Arbor supports writing string concatenations, leveraging Kotlin concatenations leads to strings being evaluated regardless of if they will be logged. In release that means CPU cycles may be wasted towards logging that is ultimately never printed. The `arbor` Kotlin extension leverages functions to work around this.
+
+Debug message
+```kotlin
+arbor { "Debug" }
+```
+
+Changing the log level
+```kotlin
+arbor(LogLevel.E) { "Error" }
+```
+
+Levering custom tags via Arbor branches
+```kotlin
+val tag = Arbor.tag("MyTag")
+arbor(branch = tag) { "Custom Tag" }
+```
+
 ## Install
 Arbor is a Kotlin Multiplatform project supporting JavaScript, JVM, and Android platforms.
 

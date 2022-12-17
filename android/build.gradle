@@ -57,12 +57,12 @@ kotlin {
         androidMain {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-                implementation project(':common')
+                implementation project(':arbor')
             }
         }
         androidTest {
             dependencies {
-                implementation project(':common')
+                implementation project(':arbor')
                 implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
                 implementation "org.mockito:mockito-core:3.5.15"
             }
@@ -88,7 +88,7 @@ build.dependsOn jacocoTestReportAndroid
 detekt {
     buildUponDefaultConfig = true
     input = files("src/androidMain/kotlin")
-    config = project(':common').files("detekt.yml")
+    config = project(':arbor').files("detekt.yml")
 }
 
 task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {

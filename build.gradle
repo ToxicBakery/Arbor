@@ -2,16 +2,16 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 buildscript {
-    ext.kotlin_version = '1.6.10'
+    ext.kotlin_version = '1.7.20'
     ext.dokka_version = '1.4.20'
-    ext.jacoco_version = '0.8.5'
+    ext.jacoco_version = '0.8.8'
     repositories {
         google()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
     }
@@ -52,7 +52,7 @@ subprojects {
     final buildNumber = getGitCommitCount() ?: "0"
 
     group 'com.ToxicBakery.logging'
-    version "1.37.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
+    version "1.38.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
 
     repositories {
         google()

@@ -12,11 +12,7 @@ jacoco {
 }
 
 kotlin {
-    jvm {
-        mavenPublication {
-            artifactId = 'arbor-jvm'
-        }
-    }
+    jvm()
 
     js {
         browser {
@@ -27,9 +23,6 @@ kotlin {
         }
         nodejs()
         tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
-        mavenPublication {
-            artifactId = 'arbor-js'
-        }
     }
 
     sourceSets {

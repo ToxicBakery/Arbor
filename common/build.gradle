@@ -14,7 +14,7 @@ jacoco {
 kotlin {
     jvm()
 
-    js {
+    js(BOTH) {
         browser {
             testTask {
                 // Skip if CI

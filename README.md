@@ -1,6 +1,6 @@
 ![arbor](https://github.com/ToxicBakery/Arbor/blob/master/art/arbor.png?raw=true)
 
-# Arbor [![CircleCI](https://circleci.com/gh/ToxicBakery/Arbor.svg?style=svg)](https://circleci.com/gh/ToxicBakery/Arbor) [![Maven Central](https://img.shields.io/maven-central/v/com.ToxicBakery.logging/common.svg)](https://oss.sonatype.org/content/repositories/releases/com/ToxicBakery/logging/) [![Maven Central](https://img.shields.io/maven-metadata/v/https/oss.sonatype.org/content/repositories/snapshots/com/ToxicBakery/logging/common/maven-metadata.xml.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/ToxicBakery/logging/) [![codecov](https://codecov.io/gh/ToxicBakery/Arbor/branch/master/graph/badge.svg)](https://codecov.io/gh/ToxicBakery/Arbor)
+# Arbor [![CircleCI](https://circleci.com/gh/ToxicBakery/Arbor.svg?style=svg)](https://circleci.com/gh/ToxicBakery/Arbor) [![Maven Central](https://img.shields.io/maven-metadata/v/https/oss.sonatype.org/content/repositories/releases/com/ToxicBakery/logging/arbor/maven-metadata.xml.svg)](https://oss.sonatype.org/content/repositories/releases/com/ToxicBakery/logging/) [![Maven Central](https://img.shields.io/maven-metadata/v/https/oss.sonatype.org/content/repositories/snapshots/com/ToxicBakery/logging/arbor/maven-metadata.xml.svg)](https://oss.sonatype.org/content/repositories/snapshots/com/ToxicBakery/logging/) [![codecov](https://codecov.io/gh/ToxicBakery/Arbor/branch/master/graph/badge.svg)](https://codecov.io/gh/ToxicBakery/Arbor)
 Timber like logging implementation for Kotlin Multiplatform.
 
 ## Purpose

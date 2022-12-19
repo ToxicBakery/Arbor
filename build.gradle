@@ -52,7 +52,7 @@ subprojects {
     final buildNumber = getGitCommitCount() ?: "0"
 
     group 'com.ToxicBakery.logging'
-    version "1.38.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
+    version "1.39.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
 
     repositories {
         google()

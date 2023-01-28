@@ -25,6 +25,8 @@ kotlin {
         tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
     }
 
+    wasm32()
+
     sourceSets {
         commonMain {
             dependencies {
@@ -64,7 +66,7 @@ configurations.all {
     resolutionStrategy {
         eachDependency {
             if ("org.jacoco" == requested.group) {
-                useVersion("0.8.7")
+                useVersion(jacoco_version)
             }
         }
     }
@@ -173,6 +175,11 @@ task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
     from "$buildDir/javadoc/jvm"
 }
 
+task dokkaJavadocWasm32Jar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
+    classifier('javadoc')
+    from "$buildDir/javadoc/jvm"
+}
+
 publishing {
     publications.all { pub ->
         pom.withXml {
@@ -243,6 +250,9 @@ publishing {
         }
         publications.getByName('jvm') {
             artifact dokkaJavadocJvmJar
+        }
+        publications.getByName('wasm32') {
+            artifact dokkaJavadocWasm32Jar
         }
         publications.getByName('kotlinMultiplatform') {
             artifact dokkaJavadocCommonJar

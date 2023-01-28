@@ -1,3 +1,4 @@
+echo "" >> gradle.properties
 echo "org.gradle.parallel=false" >> gradle.properties
 echo "kotlin.incremental=false" >> gradle.properties
 

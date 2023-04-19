@@ -2,7 +2,7 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 
 buildscript {
-    ext.kotlin_version = '1.7.20'
+    ext.kotlin_version = '1.8.20'
     ext.dokka_version = '1.4.20'
     ext.jacoco_version = '0.8.8'
     repositories {
@@ -29,13 +29,6 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
-// Work around for mac based builds which are only supported in NPM 16 and newer
-// https://youtrack.jetbrains.com/issue/KT-49109
-rootProject.plugins.withType(Class.forName("org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin")) {
-    rootProject.extensions.getByType(NodeJsRootExtension.class)
-            .nodeVersion = "16.0.0"
-}
-
 def getGitCommitCount() {
     try {
         def process = "git rev-list HEAD --count".execute()
@@ -52,7 +45,7 @@ subprojects {
     final buildNumber = getGitCommitCount() ?: "0"
 
     group 'com.ToxicBakery.logging'
-    version "1.39.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
+    version "1.40.$buildNumber" + (isCI && isMaster ? "" : "-SNAPSHOT")
 
     repositories {
         google()

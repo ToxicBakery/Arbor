@@ -13,8 +13,7 @@ jacoco {
 
 kotlin {
     jvm()
-
-    js(BOTH) {
+    js(IR) {
         browser {
             testTask {
                 // Skip if CI
@@ -22,10 +21,8 @@ kotlin {
             }
         }
         nodejs()
-        tasks[compilations.main.compileKotlinTaskName].kotlinOptions.moduleKind = "umd"
+        useEsModules()
     }
-
-    wasm32()
 
     sourceSets {
         commonMain {
@@ -88,8 +85,8 @@ task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
     executionData.from(files("$buildDir/jacoco/jvmTest.exec"))
 
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 
@@ -116,9 +113,9 @@ task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build', gr
     ))
 
     reports {
-        xml.enabled = true
+        xml.required = true
         xml.setDestination(file("$buildDir/reports/jacoco/unified/jacocoTestReportUnified.xml"))
-        html.enabled = true
+        html.required = true
         html.setDestination(file("$buildDir/reports/jacoco/unified/html"))
     }
 }
@@ -154,29 +151,29 @@ task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask, group: 'documentat
 }
 
 task emptySourcesJar(type: Jar, group: 'publishing') {
-    classifier('sources')
+    archiveClassifier.set('sources')
 }
 task emptyJavadocJar(type: Jar, group: 'publishing') {
-    classifier('javadoc')
+    archiveClassifier.set('javadoc')
 }
 
 task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    classifier('javadoc')
+    archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/common"
 }
 
 task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    classifier('javadoc')
+    archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/js"
 }
 
 task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    classifier('javadoc')
+    archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/jvm"
 }
 
 task dokkaJavadocWasm32Jar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    classifier('javadoc')
+    archiveClassifier.set('javadoc')
     from "$buildDir/javadoc/jvm"
 }
 
@@ -227,12 +224,12 @@ publishing {
             dependsOn: project(":android").tasks.find { it.name == 'build' },
             group: 'publishing'
     ) {
-        classifier('javadoc')
+        archiveClassifier.set('javadoc')
         from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
     }
 
     task androidSourcesJar(type: Jar, group: 'publishing') {
-        classifier('sources')
+        archiveClassifier.set('sources')
         from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
     }
 
@@ -250,9 +247,6 @@ publishing {
         }
         publications.getByName('jvm') {
             artifact dokkaJavadocJvmJar
-        }
-        publications.getByName('wasm32') {
-            artifact dokkaJavadocWasm32Jar
         }
         publications.getByName('kotlinMultiplatform') {
             artifact dokkaJavadocCommonJar

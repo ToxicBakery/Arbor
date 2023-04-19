@@ -79,8 +79,8 @@ task jacocoTestReportAndroid(type: JacocoReport) {
     executionData.from(fileTree(dir: "$buildDir/jacoco", include: "*.exec"))
 
     reports {
-        xml.enabled = true
-        html.enabled = true
+        xml.required = true
+        html.required = true
     }
 }
 build.dependsOn jacocoTestReportAndroid
@@ -92,12 +92,12 @@ detekt {
 }
 
 task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier('javadoc')
+    archiveClassifier.set("javadoc")
     from "$buildDir/javadoc/android"
 }
 
 task androidSourcesJar(type: Jar) {
-    classifier('sources')
+    archiveClassifier.set('sources')
     from kotlin.sourceSets.androidMain.kotlin.srcDirs
 }
 

@@ -1,0 +1,11 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.toxicbakery.logging/Seedling.Companion///PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/-companion/index.html
+$dokka.location:com.toxicbakery.logging/Seedling.Companion/prettyPrint/kotlin.Throwable#/PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/-companion/pretty-print.html
+$dokka.location:com.toxicbakery.logging/Seedling///PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/index.html
+$dokka.location:com.toxicbakery.logging/Seedling/Seedling/#/PointingToDeclaration/com.toxicbakery.logging/[js]-seedling/-seedling.html
+$dokka.location:com.toxicbakery.logging/Seedling/Seedling/#java.io.PrintStream#java.io.PrintStream#kotlin.Int/PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/-seedling.html
+$dokka.location:com.toxicbakery.logging/Seedling/log/#kotlin.Int#kotlin.String#kotlin.String#kotlin.Throwable?#kotlin.Array[kotlin.Any?]?/PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/log.html
+$dokka.location:com.toxicbakery.logging/Seedling/tag/#/PointingToDeclaration/com.toxicbakery.logging/[jvm]-seedling/tag.html
+com.toxicbakery.logging
+

@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":arbor:dokkaGhPages/android": [], ":arbor:dokkaGhPages/commonMain": [], ":arbor:dokkaGhPages/jsMain": [":arbor:dokkaGhPages/commonMain"], ":arbor:dokkaGhPages/jvmMain": [":arbor:dokkaGhPages/commonMain"]}'

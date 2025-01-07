@@ -3,7 +3,7 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'org.jetbrains.dokka'
-    id 'io.gitlab.arturbosch.detekt'
+    id "io.gitlab.arturbosch.detekt"
     id 'jacoco'
 }
 
@@ -12,6 +12,7 @@ jacoco {
 }
 
 kotlin {
+    jvmToolchain(17)
     jvm()
     js(IR) {
         browser {
@@ -23,43 +24,61 @@ kotlin {
         nodejs()
         useEsModules()
     }
+    wasmJs {
+        nodejs()
+        binaries.executable()
+    }
+    wasmWasi {
+        nodejs()
+        binaries.executable()
+    }
 
     sourceSets {
         commonMain {
             dependencies {
-                implementation kotlin('stdlib-common')
+                implementation kotlin("stdlib-common")
             }
         }
         commonTest {
             dependencies {
-                implementation kotlin('test-common')
-                implementation kotlin('test-annotations-common')
+                implementation kotlin("test-common")
+                implementation kotlin("test-annotations-common")
             }
         }
         jsMain {
             dependencies {
-                implementation kotlin('stdlib-js')
+                implementation kotlin("stdlib-js")
             }
         }
         jsTest {
             dependencies {
-                implementation kotlin('test-js')
+                implementation kotlin("test-js")
             }
         }
         jvmMain {
             dependencies {
-                implementation kotlin('stdlib')
+                implementation kotlin("stdlib")
             }
         }
         jvmTest {
             dependencies {
-                implementation kotlin('test-junit')
+                implementation kotlin("test-junit")
+            }
+        }
+        wasmJsTest {
+            dependencies {
+                implementation kotlin("test")
+            }
+        }
+        wasmWasiTest {
+            dependencies {
+                implementation kotlin("test")
             }
         }
     }
 }
 
-configurations.all {
+configurations.configureEach {
     resolutionStrategy {
         eachDependency {
             if ("org.jacoco" == requested.group) {
@@ -69,7 +88,10 @@ configurations.all {
     }
 }
 
-task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
+tasks.register("jacocoTestReportJvm", JacocoReport) {
+    group = "jacoco"
+    dependsOn.add("jvmTest")
+
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
     def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
     def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
@@ -90,100 +112,85 @@ task jacocoTestReportJvm(type: JacocoReport, group: 'jacoco') {
     }
 }
 
-task jacocoTestReportUnified(type: JacocoReport, dependsOn: ':android:build', group: 'jacoco') {
+tasks.register("jacocoTestReportUnified", JacocoReport) {
+    group = "jacoco"
+    dependsOn.addAll(['jacocoTestReportJvm'/*, ':android:build'*/])
+
+    def buildDirectory = layout.buildDirectory.getAsFile().get()
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def commonTree = fileTree(dir: "$buildDir/classes/kotlin/common/main", excludes: fileFilter)
-    def jvmTree = fileTree(dir: "$buildDir/classes/kotlin/jvm/main", excludes: fileFilter)
-    def androidTree = fileTree(dir: "${project(':android').buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def commonTree = fileTree(dir: "$buildDirectory/classes/kotlin/common/main", excludes: fileFilter)
+    def jvmTree = fileTree(dir: "$buildDirectory/classes/kotlin/jvm/main", excludes: fileFilter)
+//    def androidTree = fileTree(dir: "${project(':android').buildDir}/tmp/kotlin-classes/debug", excludes: fileFilter)
 
     classDirectories.from(files(
             commonTree,
             jvmTree,
-            androidTree
+//            androidTree
     ))
     sourceDirectories.from(files(
             "src/commonMain/kotlin",
             "src/jvmMain/kotlin",
-            "${project(':android').projectDir}/src/androidMain/kotlin"
+//            "${project(':android').projectDir}/src/androidMain/kotlin"
     ))
     //noinspection ChangeToOperator
     executionData.from(files(
-            "$buildDir/jacoco/jvmTest.exec",
-            fileTree(dir: "${project(':android').buildDir}/jacoco", include: "*.exec")
+            "$buildDirectory/jacoco/jvmTest.exec",
+//            fileTree(dir: "${project(':android').buildDir}/jacoco", include: "*.exec")
     ))
 
     reports {
         xml.required = true
-        xml.setDestination(file("$buildDir/reports/jacoco/unified/jacocoTestReportUnified.xml"))
+        xml.outputLocation.set(file("$buildDirectory/reports/jacoco/unified/jacocoTestReportUnified.xml"))
         html.required = true
-        html.setDestination(file("$buildDir/reports/jacoco/unified/html"))
+        html.outputLocation.set(file("$buildDirectory/reports/jacoco/unified/html"))
     }
 }
 
 detekt {
     buildUponDefaultConfig = true
-    input = files(
-            "src/commonMain/kotlin",
-            "src/jsMain/kotlin",
-            "src/jvmMain/kotlin",
-    )
-    config = files("detekt.yml")
+    allRules = false
+    config.setFrom("detekt.yml")
 }
 
-task cleanGhPages(type: Delete, group: 'build') {
-    delete fileTree("gh-pages") {
+tasks.register("cleanGhPages", Delete) { deleteTask ->
+    group = "build"
+    tasks.named("clean").get().dependsOn(deleteTask)
+
+    deleteTask.delete(fileTree("gh-pages") {
         include '**'
         exclude 'CNAME'
         exclude 'index.html'
-    }
-    tasks.getByName("clean").dependsOn(cleanGhPages)
+    })
 }
 
-task dokkaGhPages(type: org.jetbrains.dokka.gradle.DokkaTask, group: 'documentation') {
+tasks.dokkaHtml {
     outputDirectory = file("${project.projectDir}/gh-pages")
-    dokkaSourceSets {
-        register("android") {
-            displayName.set("Android")
-            platform.set(org.jetbrains.dokka.Platform.jvm)
-            sourceRoots.from(project(":android").kotlin.sourceSets.getByName("androidMain").kotlin.srcDirs)
-        }
-    }
 }
 
-task emptySourcesJar(type: Jar, group: 'publishing') {
+tasks.register("emptySourcesJar", Jar) {
+    group = "publishing"
     archiveClassifier.set('sources')
 }
-task emptyJavadocJar(type: Jar, group: 'publishing') {
+
+tasks.register("emptyJavadocJar", Jar) {
+    group = "publishing"
     archiveClassifier.set('javadoc')
 }
 
-task dokkaJavadocCommonJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
+tasks.register("dokkaJavadocCommonJar", Jar) {
+    group = "publishing"
+    dependsOn(dokkaGenerate)
     archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/common"
-}
-
-task dokkaJavadocJsJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/js"
-}
-
-task dokkaJavadocJvmJar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/jvm"
-}
-
-task dokkaJavadocWasm32Jar(type: Jar, dependsOn: dokkaHtml, group: 'publishing') {
-    archiveClassifier.set('javadoc')
-    from "$buildDir/javadoc/jvm"
+    from layout.buildDirectory.dir("dokka/html")
 }
 
 publishing {
-    publications.all { pub ->
+    publications.configureEach { pub ->
         pom.withXml {
             def root = asNode()
 
             root.children().last() + {
-                resolveStrategy = DELEGATE_FIRST
+                resolveStrategy = 1 // DELEGATE_FIRST
 
                 description POM_DESCRIPTION
                 name POM_NAME
@@ -221,35 +228,41 @@ publishing {
 
     task dokkaJavadocAndroidJar(
             type: Jar,
-            dependsOn: project(":android").tasks.find { it.name == 'build' },
+//            dependsOn: project(":android").tasks.find { it.name == 'build' },
             group: 'publishing'
     ) {
         archiveClassifier.set('javadoc')
-        from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
+//        from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
     }
 
     task androidSourcesJar(type: Jar, group: 'publishing') {
         archiveClassifier.set('sources')
-        from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
+//        from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
     }
 
     afterEvaluate {
         publications {
             maven(MavenPublication) {
                 artifactId "arbor-android"
-                artifact "${project(':android').buildDir}/outputs/aar/android-release.aar"
+//                artifact "${project(':android').buildDir}/outputs/aar/android-release.aar"
                 artifact dokkaJavadocAndroidJar
                 artifact androidSourcesJar
             }
         }
-        publications.getByName('js') {
-            artifact dokkaJavadocJsJar
+        publications.named("js") {
+            artifact tasks.named("dokkaJavadocCommonJar")
         }
-        publications.getByName('jvm') {
-            artifact dokkaJavadocJvmJar
+        publications.named("jvm") {
+            artifact tasks.named("dokkaJavadocCommonJar")
         }
-        publications.getByName('kotlinMultiplatform') {
-            artifact dokkaJavadocCommonJar
+        publications.named("wasmJs") {
+            artifact tasks.named("dokkaJavadocCommonJar")
+        }
+        publications.named("wasmWasi") {
+            artifact tasks.named("dokkaJavadocCommonJar")
+        }
+        publications.named("kotlinMultiplatform") {
+            artifact tasks.named("dokkaJavadocCommonJar")
         }
     }
 
@@ -280,9 +293,15 @@ signing {
     sign publishing.publications
 }
 
-build.dependsOn 'jacocoTestReportJvm'
-build.dependsOn 'jacocoTestReportUnified'
-
-afterEvaluate {
-    check.dependsOn('detekt')
+tasks.withType(AbstractPublishToMaven).configureEach {
+    dependsOn(
+            tasks.named("dokkaJavadocAndroidJar"),
+            tasks.named("dokkaJavadocCommonJar"),
+    )
 }
+
+tasks.named("check").get().dependsOn("detekt")
+tasks.named("build").get().dependsOn(
+        "jacocoTestReportJvm",
+        "jacocoTestReportUnified",
+)

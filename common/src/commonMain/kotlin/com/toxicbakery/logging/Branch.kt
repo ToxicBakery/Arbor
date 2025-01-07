@@ -4,14 +4,10 @@ package com.toxicbakery.logging
  * An instance of the Arbor API representing the state of the forest.
  */
 @Suppress("TooManyFunctions")
-class Branch internal constructor(private val tag: String = "") {
+@ConsistentCopyVisibility
+data class Branch internal constructor(private val tag: String = "") {
 
     private val tagIsBlank: Boolean = tag.isBlank()
-
-    override fun equals(other: Any?): Boolean =
-        other is Branch && other.tag == tag
-
-    override fun hashCode(): Int = tag.hashCode()
 
     private fun determineTag(seedling: ISeedling): String =
         if (tagIsBlank) seedling.tag else tag
@@ -30,6 +26,14 @@ class Branch internal constructor(private val tag: String = "") {
     fun d(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.DEBUG, determineTag(seedling), msg)
+        }
+
+    /**
+     * Log a debug message.
+     */
+    fun d(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.DEBUG, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -75,6 +79,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log a verbose message.
      */
+    fun v(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.VERBOSE, determineTag(seedling), msg, throwable)
+        }
+
+    /**
+     * Log a verbose message.
+     */
     fun v(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.VERBOSE, determineTag(seedling), msg, throwable)
@@ -110,6 +122,14 @@ class Branch internal constructor(private val tag: String = "") {
     fun i(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.INFO, determineTag(seedling), msg)
+        }
+
+    /**
+     * Log an info message.
+     */
+    fun i(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.INFO, determineTag(seedling), msg, throwable)
         }
 
     /**
@@ -155,6 +175,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log a warning message.
      */
+    fun w(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.WARNING, determineTag(seedling), msg, throwable)
+        }
+
+    /**
+     * Log a warning message.
+     */
     fun w(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.WARNING, determineTag(seedling), msg, throwable)
@@ -195,6 +223,14 @@ class Branch internal constructor(private val tag: String = "") {
     /**
      * Log an error message.
      */
+    fun e(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.ERROR, determineTag(seedling), msg, throwable)
+        }
+
+    /**
+     * Log an error message.
+     */
     fun e(throwable: Throwable, msg: String = "") = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.ERROR, determineTag(seedling), msg, throwable)
@@ -230,6 +266,14 @@ class Branch internal constructor(private val tag: String = "") {
     fun wtf(msg: () -> String) = Arbor.forest
         .forEach { seedling ->
             seedling.log(Arbor.WTF, determineTag(seedling), msg)
+        }
+
+    /**
+     * Log a wtf message.
+     */
+    fun wtf(throwable: Throwable, msg: () -> String) = Arbor.forest
+        .forEach { seedling ->
+            seedling.log(Arbor.WTF, determineTag(seedling), msg, throwable)
         }
 
     /**

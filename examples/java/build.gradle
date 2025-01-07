@@ -4,13 +4,12 @@ plugins {
     id 'kotlin-multiplatform'
 }
 
-sourceCompatibility = 1.8
-
 repositories {
     mavenCentral()
 }
 
 kotlin {
+    jvmToolchain(17)
     jvm {
         dependencies {
             implementation project(":arbor")
@@ -24,5 +23,5 @@ application {
     mainClass = "com.ToxicBakery.logging.Main"
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_1_8
-java.targetCompatibility = JavaVersion.VERSION_1_8
+java.sourceCompatibility = JavaVersion.VERSION_17
+java.targetCompatibility = JavaVersion.VERSION_17

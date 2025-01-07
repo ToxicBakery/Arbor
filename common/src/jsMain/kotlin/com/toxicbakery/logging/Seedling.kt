@@ -35,7 +35,7 @@ class Seedling : ISeedling {
         throwable: Throwable?,
         args: Array<out Any?>?
     ) {
-        require(level >= DEBUG && level <= Arbor.WTF)
+        require(level in DEBUG..WTF)
         val message = "$tag$msg"
         if (message.isEmpty() && throwable == null) return
         if (throwable == null) log(level, message)

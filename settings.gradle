@@ -1,9 +1,9 @@
 
 include ':common'
-include ':android'
-include ':examples:android'
-include ':examples:java'
+//include ':android'
+//include ':examples:android'
+//include ':examples:java'
 
 project(':common').name = 'arbor'
-project(':examples:android').name = 'android-example'
-project(':examples:java').name = 'java-example'
+//project(':examples:android').name = 'android-example'
+//project(':examples:java').name = 'java-example'

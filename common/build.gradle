@@ -26,11 +26,9 @@ kotlin {
     }
     wasmJs {
         nodejs()
-        binaries.executable()
     }
     wasmWasi {
         nodejs()
-        binaries.executable()
     }
 
     sourceSets {
@@ -226,25 +224,22 @@ publishing {
         }
     }
 
-    task dokkaJavadocAndroidJar(
-            type: Jar,
-//            dependsOn: project(":android").tasks.find { it.name == 'build' },
-            group: 'publishing'
-    ) {
+    tasks.register("dokkaJavadocAndroidJar", Jar) {
+        group = "publishing"
         archiveClassifier.set('javadoc')
-//        from "${project(':android').buildDir}/libs/android-${project.version}-javadoc.jar"
+        from project(":android").tasks.named("dokkaJavadocAndroidJar")
     }
 
-    task androidSourcesJar(type: Jar, group: 'publishing') {
-        archiveClassifier.set('sources')
-//        from "${project(':android').buildDir}/libs/android-${project.version}-sources.jar"
+    tasks.register("androidSourcesJar", Jar) {
+        group = "publishing"
+        from project(":android").tasks.named("androidSourcesJar")
     }
 
     afterEvaluate {
         publications {
             maven(MavenPublication) {
                 artifactId "arbor-android"
-//                artifact "${project(':android').buildDir}/outputs/aar/android-release.aar"
+                artifact project(":android").layout.buildDirectory.file("outputs/aar/android-release.aar")
                 artifact dokkaJavadocAndroidJar
                 artifact androidSourcesJar
             }

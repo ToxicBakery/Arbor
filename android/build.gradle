@@ -33,26 +33,12 @@ android {
     }
 }
 
-configurations.configureEach {
-    resolutionStrategy {
-        eachDependency {
-            if ("org.jacoco" == requested.group) {
-                useVersion("0.8.7")
-            }
-        }
-    }
-}
-
 kotlin {
     jvmToolchain(17)
     androidTarget {
         publishLibraryVariantsGroupedByFlavor = true
-    }
-    targets {
-        android {
-            mavenPublication {
-                artifactId = 'arbor-android'
-            }
+        mavenPublication {
+            artifactId = 'arbor-android'
         }
     }
 
@@ -73,40 +59,44 @@ kotlin {
     }
 }
 
-//task jacocoTestReportAndroid(type: JacocoReport) {
-//    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-//    def debugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
-//
-//    classDirectories.from(files(debugTree))
-//    sourceDirectories.from(files("src/androidMain/kotlin"))
-//    executionData.from(fileTree(dir: "$buildDir/jacoco", include: "*.exec"))
-//
-//    reports {
-//        xml.required = true
-//        html.required = true
-//    }
-//}
-//build.dependsOn jacocoTestReportAndroid
+tasks.register("jacocoTestReportAndroid", JacocoReport) {
+    group = "jacoco"
+    dependsOn.add("test")
 
-//detekt {
-//    buildUponDefaultConfig = true
-//    input = files("src/androidMain/kotlin")
-//    config = project(':arbor').files("detekt.yml")
-//}
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
 
-//task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {
-//    setArchiveClassifier("javadoc")
-//    from "${layout.buildDirectory.get().asFile}/javadoc/android"
-//}
-//
-//task androidSourcesJar(type: Jar) {
-//    setArchiveClassifier('sources')
-//    from kotlin.sourceSets.androidMain.kotlin.srcDirs
-//}
-//
-//build.dependsOn("dokkaJavadocAndroidJar")
-//build.dependsOn("androidSourcesJar")
+    classDirectories.from(files(debugTree))
+    sourceDirectories.from(files("src/androidMain/kotlin"))
+    executionData.from(fileTree(dir: "$buildDir/jacoco", include: "*.exec"))
 
-//afterEvaluate {
-//    check.dependsOn('detekt')
-//}
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(project(':arbor').files("detekt.yml"))
+}
+
+tasks.register("dokkaJavadocAndroidJar", Jar) {
+    group = "publishing"
+    archiveClassifier.set('javadoc')
+    from layout.buildDirectory.dir("javadoc/android")
+}
+
+tasks.register("androidSourcesJar", Jar) {
+    group = "publishing"
+    archiveClassifier.set('sources')
+    from kotlin.sourceSets.androidMain.kotlin.srcDirs
+}
+
+tasks.named("check").get().dependsOn("detekt")
+tasks.named("build").get().dependsOn(
+        "androidSourcesJar",
+        "dokkaJavadocAndroidJar",
+        "jacocoTestReportAndroid",
+)

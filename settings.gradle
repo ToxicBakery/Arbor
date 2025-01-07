@@ -1,6 +1,6 @@
 
 include ':common'
-//include ':android'
+include ':android'
 //include ':examples:android'
 //include ':examples:java'
 

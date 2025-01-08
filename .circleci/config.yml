@@ -9,6 +9,9 @@ orbs:
 
 jobs:
   build:
+    executor:
+      name: android/android-machine
+      resource-class: large
     steps:
       - checkout
       - android/restore-gradle-cache
@@ -25,9 +28,6 @@ workflows:
     jobs:
       - build:
           context: Sonatype
-          executor:
-            name: android/android-machine
-            resource-class: large
           filters:
             tags:
               only: /.*/

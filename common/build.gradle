@@ -155,22 +155,24 @@ tasks.dokkaHtml {
     outputDirectory = file("${project.projectDir}/gh-pages")
 }
 
-tasks.register("emptySourcesJar", Jar) {
-    group = "publishing"
-    archiveClassifier.set('sources')
-}
-
-tasks.register("emptyJavadocJar", Jar) {
-    group = "publishing"
-    archiveClassifier.set('javadoc')
-}
-
-tasks.register("dokkaJavadocCommonJar", Jar) {
-    group = "publishing"
-    dependsOn(dokkaGenerate)
-    archiveClassifier.set('javadoc')
-    from layout.buildDirectory.dir("dokka/html")
-}
+def tasksNeedingSigning = [
+        tasks.register("dokkaJavadocCommonJar", Jar) {
+            group = "publishing"
+            dependsOn(dokkaGenerate)
+            archiveClassifier.set('javadoc')
+            from layout.buildDirectory.dir("dokka/html")
+        },
+        tasks.register("dokkaJavadocAndroidJar", Jar) {
+            group = "publishing"
+            archiveClassifier.set('javadoc')
+            from project(projects.android.path).tasks.named("dokkaJavadocAndroidJar")
+        },
+        tasks.register("androidSourcesJar", Jar) {
+            group = "publishing"
+            archiveClassifier.set("sources")
+            from project(projects.android.path).tasks.named("androidSourcesJar")
+        },
+]
 
 publishing {
     publications.configureEach { pub ->
@@ -212,18 +214,6 @@ publishing {
                 appendDepNode(dependenciesNode, 'com.ToxicBakery.logging', 'arbor-jvm', version, 'runtime')
             }
         }
-    }
-
-    tasks.register("dokkaJavadocAndroidJar", Jar) {
-        group = "publishing"
-        archiveClassifier.set('javadoc')
-        from project(projects.android.path).tasks.named("dokkaJavadocAndroidJar")
-    }
-
-    tasks.register("androidSourcesJar", Jar) {
-        group = "publishing"
-        archiveClassifier.set("sources")
-        from project(projects.android.path).tasks.named("androidSourcesJar")
     }
 
     afterEvaluate {
@@ -277,14 +267,13 @@ static def appendDepNode(Node node, String groupId, String artifactId, String ve
 signing {
     required false
     sign publishing.publications
-    sign tasks.named("dokkaJavadocCommonJar").get()
 }
 
 tasks.withType(AbstractPublishToMaven).configureEach {
-    dependsOn(
-            tasks.named("dokkaJavadocAndroidJar"),
-            tasks.named("dokkaJavadocCommonJar"),
-    )
+    dependsOn(tasksNeedingSigning)
+}
+tasks.withType(Sign).configureEach {
+    dependsOn(tasksNeedingSigning)
 }
 
 tasks.named("check").get().dependsOn("detekt")

@@ -275,6 +275,9 @@ tasks.withType(AbstractPublishToMaven).configureEach {
 tasks.withType(Sign).configureEach {
     dependsOn(tasksNeedingSigning)
 }
+tasks.withType(PublishToMavenRepository).configureEach {
+    dependsOn(tasks.withType(Sign))
+}
 
 tasks.named("check").get().dependsOn("detekt")
 tasks.named("build").get().dependsOn(

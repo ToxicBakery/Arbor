@@ -1,5 +1,4 @@
 version: 2.1
-defaults: &defaults
 
 branches:
   ignore:
@@ -10,7 +9,6 @@ orbs:
 
 jobs:
   build:
-    <<: *defaults
     steps:
       - checkout
       - android/restore-gradle-cache

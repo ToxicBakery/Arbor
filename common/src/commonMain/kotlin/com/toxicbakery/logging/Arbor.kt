@@ -96,6 +96,12 @@ object Arbor {
      * Log a debug message.
      */
     @JvmStatic
+    fun d(throwable: Throwable, msg: () -> String) = taglessBranch.d(throwable, msg)
+
+    /**
+     * Log a debug message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun d(throwable: Throwable, msg: String = "") = taglessBranch.d(throwable, msg)
 
@@ -122,6 +128,12 @@ object Arbor {
      */
     @JvmStatic
     fun v(msg: () -> String) = taglessBranch.v(msg)
+
+    /**
+     * Log a verbose message.
+     */
+    @JvmStatic
+    fun v(throwable: Throwable, msg: () -> String) = taglessBranch.v(throwable, msg)
 
     /**
      * Log a verbose message.
@@ -158,6 +170,12 @@ object Arbor {
      * Log an info message.
      */
     @JvmStatic
+    fun i(throwable: Throwable, msg: () -> String) = taglessBranch.i(throwable, msg)
+
+    /**
+     * Log an info message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun i(throwable: Throwable, msg: String = "") = taglessBranch.i(throwable, msg)
 
@@ -184,6 +202,12 @@ object Arbor {
      */
     @JvmStatic
     fun w(msg: () -> String) = taglessBranch.w(msg)
+
+    /**
+     * Log a warning message.
+     */
+    @JvmStatic
+    fun w(throwable: Throwable, msg: () -> String) = taglessBranch.w(throwable, msg)
 
     /**
      * Log a warning message.
@@ -220,6 +244,12 @@ object Arbor {
      * Log an error message.
      */
     @JvmStatic
+    fun e(throwable: Throwable, msg: () -> String) = taglessBranch.e(throwable, msg)
+
+    /**
+     * Log an error message.
+     */
+    @JvmStatic
     @JvmOverloads
     fun e(throwable: Throwable, msg: String = "") = taglessBranch.e(throwable, msg)
 
@@ -246,6 +276,12 @@ object Arbor {
      */
     @JvmStatic
     fun wtf(msg: () -> String) = taglessBranch.wtf(msg)
+
+    /**
+     * Log a wtf message.
+     */
+    @JvmStatic
+    fun wtf(throwable: Throwable, msg: () -> String) = taglessBranch.wtf(throwable, msg)
 
     /**
      * Log a wtf message.

@@ -1,0 +1,18 @@
+[versions]
+android-gradlePlugin = "8.7.0"
+detekt = "1.23.7"
+dokka = "2.0.0"
+jacoco = "0.8.9"
+kotlin = "2.1.0"
+mockito = "3.5.15"
+
+[libraries]
+kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+
+[plugins]
+gradle-android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }
+gradle-android-library = { id = "com.android.library", version.ref = "android-gradlePlugin" }
+gradle-android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+gradle-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+gradle-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

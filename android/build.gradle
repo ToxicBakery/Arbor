@@ -1,19 +1,21 @@
 plugins {
-    id 'com.android.library'
-    id 'kotlin-multiplatform'
-    id 'io.gitlab.arturbosch.detekt'
-    id 'org.jetbrains.dokka'
-    id 'jacoco'
+    alias(libs.plugins.gradle.android.library)
+    id "kotlin-multiplatform"
+    alias(libs.plugins.gradle.detekt)
+    alias(libs.plugins.gradle.dokka)
+    id "jacoco"
 }
 
 jacoco {
-    toolVersion = jacoco_version
+    toolVersion = libs.versions.jacoco
 }
 
 android {
-    compileSdkVersion 31
     defaultConfig {
+        compileSdk 34
+        namespace = "$group"
         minSdkVersion 15
+        targetSdk 34
     }
     buildTypes {
         release {
@@ -25,85 +27,75 @@ android {
         unitTests.all {
             jacoco {
                 includeNoLocationClasses = true
-                excludes = ['jdk.internal.*']       //This line
-            }
-        }
-    }
-}
-
-configurations.all {
-    resolutionStrategy {
-        eachDependency {
-            if ("org.jacoco" == requested.group) {
-                useVersion("0.8.7")
+                excludes = ["jdk.internal.*"]       //This line
             }
         }
     }
 }
 
 kotlin {
-    android {
+    jvmToolchain(17)
+    androidTarget {
         publishLibraryVariantsGroupedByFlavor = true
-    }
-    targets {
-        fromPreset(presets.android, 'android') {
-            mavenPublication {
-                artifactId = 'arbor-android'
-            }
+        mavenPublication {
+            artifactId = "arbor-android"
         }
     }
 
     sourceSets {
         androidMain {
             dependencies {
-                implementation 'org.jetbrains.kotlin:kotlin-stdlib'
-                implementation project(':arbor')
+                implementation kotlin("stdlib")
+                implementation projects.arbor
             }
         }
-        androidTest {
+        androidUnitTest {
             dependencies {
-                implementation project(':arbor')
-                implementation "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-                implementation "org.mockito:mockito-core:3.5.15"
+                implementation(libs.kotlin.test.junit)
+                implementation(libs.mockito.core)
             }
         }
     }
 }
 
-task jacocoTestReportAndroid(type: JacocoReport) {
-    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
-    def debugTree = fileTree(dir: "$buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+tasks.register("jacocoTestReportAndroid", JacocoReport) {
+    group = "jacoco"
+    dependsOn.add("test")
+
+    def fileFilter = ["**/R.class", "**/R\$*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*", "android/**/*.*"]
+    def debugTree = fileTree(dir: layout.buildDirectory.dir("tmp/kotlin-classes/debug"), excludes: fileFilter)
 
     classDirectories.from(files(debugTree))
     sourceDirectories.from(files("src/androidMain/kotlin"))
-    executionData.from(fileTree(dir: "$buildDir/jacoco", include: "*.exec"))
+    executionData.from(fileTree(dir: layout.buildDirectory.dir("jacoco"), include: "*.exec"))
 
     reports {
         xml.required = true
         html.required = true
     }
 }
-build.dependsOn jacocoTestReportAndroid
 
 detekt {
     buildUponDefaultConfig = true
-    input = files("src/androidMain/kotlin")
-    config = project(':arbor').files("detekt.yml")
+    allRules = false
+    config.setFrom(project(projects.arbor.path).files("detekt.yml"))
 }
 
-task dokkaJavadocAndroidJar(type: Jar, dependsOn: dokkaJavadoc) {
+tasks.register("dokkaJavadocAndroidJar", Jar) {
+    group = "publishing"
     archiveClassifier.set("javadoc")
-    from "$buildDir/javadoc/android"
+    from dokkaHtml
 }
 
-task androidSourcesJar(type: Jar) {
-    archiveClassifier.set('sources')
+tasks.register("androidSourcesJar", Jar) {
+    group = "publishing"
+    archiveClassifier.set("sources")
     from kotlin.sourceSets.androidMain.kotlin.srcDirs
 }
 
-build.dependsOn("dokkaJavadocAndroidJar")
-build.dependsOn("androidSourcesJar")
-
-afterEvaluate {
-    check.dependsOn('detekt')
-}
+tasks.named("check").get().dependsOn("detekt")
+tasks.named("build").get().dependsOn(
+        "androidSourcesJar",
+        "dokkaJavadocAndroidJar",
+        "jacocoTestReportAndroid",
+)

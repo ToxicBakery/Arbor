@@ -6,3 +6,4 @@
 local.properties
 *.hprof
 /kotlin-js-store
+.kotlin

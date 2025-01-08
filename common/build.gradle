@@ -4,11 +4,11 @@ plugins {
     id 'signing'
     alias(libs.plugins.gradle.detekt)
     alias(libs.plugins.gradle.dokka)
-    id 'jacoco'
+    id "jacoco"
 }
 
 jacoco {
-    toolVersion = libs.versions.jacoco
+    toolVersion = libs.versions.jacoco.get()
 }
 
 kotlin {
@@ -71,16 +71,6 @@ kotlin {
         wasmWasiTest {
             dependencies {
                 implementation kotlin("test")
-            }
-        }
-    }
-}
-
-configurations.configureEach {
-    resolutionStrategy {
-        eachDependency {
-            if ("org.jacoco" == requested.group) {
-                useVersion(jacoco_version)
             }
         }
     }

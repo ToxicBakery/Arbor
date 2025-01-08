@@ -7,9 +7,15 @@ plugins {
     alias(libs.plugins.gradle.dokka) apply false
 }
 
+buildscript {
+    dependencies {
+        classpath(libs.jacoco.core)
+    }
+}
+
 fun getGitCommitCount(): String? {
     try {
-        val process = Runtime.getRuntime().exec("git rev-list HEAD --count")
+        val process = ProcessBuilder("git", "rev-list", "HEAD", "--count").start()
         return process.inputStream.bufferedReader().readText().trim()
     } catch (e: Exception) {
         logger.log(LogLevel.ERROR, "Failed to get Git commit count, is Git installed?", e)

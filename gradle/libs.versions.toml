@@ -9,6 +9,7 @@ mockito = "3.5.15"
 [libraries]
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
 [plugins]
 gradle-android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }

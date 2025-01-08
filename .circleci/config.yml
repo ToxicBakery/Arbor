@@ -1,29 +1,26 @@
-version: 2.1
+version: '2.1'
 
 branches:
   ignore:
     - gh-pages
 
 orbs:
-  android: circleci/android@3.0.0
+  android: circleci/android@3.0.2
 
 jobs:
   build:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: default
     steps:
       - checkout
-      - android/restore-gradle-cache
-      - android/restore-build-cache
       - run:
           name: Execute Gradle
           command: |
             ./ci.sh
-      - android/save-gradle-cache
 
 workflows:
-  version: 2
   build:
     jobs:
       - build:

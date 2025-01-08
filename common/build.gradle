@@ -2,13 +2,13 @@ plugins {
     id 'kotlin-multiplatform'
     id 'maven-publish'
     id 'signing'
-    id 'org.jetbrains.dokka'
-    id "io.gitlab.arturbosch.detekt"
+    alias(libs.plugins.gradle.detekt)
+    alias(libs.plugins.gradle.dokka)
     id 'jacoco'
 }
 
 jacoco {
-    toolVersion = jacoco_version
+    toolVersion = libs.versions.jacoco
 }
 
 kotlin {
@@ -218,7 +218,7 @@ publishing {
 
             if (pub.artifactId == "arbor-android") {
                 def dependenciesNode = asNode().appendNode('dependencies')
-                appendDepNode(dependenciesNode, 'org.jetbrains.kotlin', 'kotlin-stdlib', kotlin_version, 'runtime')
+                appendDepNode(dependenciesNode, 'org.jetbrains.kotlin', 'kotlin-stdlib', libs.versions.kotlin.get(), 'runtime')
                 appendDepNode(dependenciesNode, 'com.ToxicBakery.logging', 'arbor-jvm', version, 'runtime')
             }
         }
@@ -227,19 +227,20 @@ publishing {
     tasks.register("dokkaJavadocAndroidJar", Jar) {
         group = "publishing"
         archiveClassifier.set('javadoc')
-        from project(":android").tasks.named("dokkaJavadocAndroidJar")
+        from project(projects.android.path).tasks.named("dokkaJavadocAndroidJar")
     }
 
     tasks.register("androidSourcesJar", Jar) {
         group = "publishing"
-        from project(":android").tasks.named("androidSourcesJar")
+        archiveClassifier.set("sources")
+        from project(projects.android.path).tasks.named("androidSourcesJar")
     }
 
     afterEvaluate {
         publications {
             maven(MavenPublication) {
                 artifactId "arbor-android"
-                artifact project(":android").layout.buildDirectory.file("outputs/aar/android-release.aar")
+                artifact project(projects.android.path).tasks.named("bundleReleaseAar")
                 artifact dokkaJavadocAndroidJar
                 artifact androidSourcesJar
             }

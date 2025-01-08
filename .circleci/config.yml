@@ -4,7 +4,7 @@ orbs:
 jobs:
   build:
     executor:
-      name: android/android-machine
+      name: android/android_machine
       resource-class: large
       tag: default
     steps:

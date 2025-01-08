@@ -1,34 +1,38 @@
+version: 2.1
 defaults: &defaults
-  working_directory: ~/repo
-  docker:
-    - image: toxicbakery/alpine-glibc-android:release-2.3
-  environment:
-    TERM: dumb
 
 branches:
   ignore:
     - gh-pages
 
-version: 2
+orbs:
+  android: circleci/android@3.0.0
+
 jobs:
   build:
     <<: *defaults
     steps:
       - checkout
+      - android/restore-gradle-cache
+      - android/restore-build-cache
       - run:
           name: Execute Gradle
           command: |
             ./ci.sh
+      - android/save-gradle-cache
+
 workflows:
   version: 2
   build:
     jobs:
       - build:
           context: Sonatype
+          executor:
+            name: android/android-machine
+            resource-class: large
           filters:
             tags:
               only: /.*/
             branches:
               ignore:
                 - gh-pages
-

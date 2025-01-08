@@ -277,6 +277,7 @@ static def appendDepNode(Node node, String groupId, String artifactId, String ve
 signing {
     required false
     sign publishing.publications
+    sign tasks.named("dokkaJavadocCommonJar").get()
 }
 
 tasks.withType(AbstractPublishToMaven).configureEach {

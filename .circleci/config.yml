@@ -1,12 +1,6 @@
-version: '2.1'
-
-branches:
-  ignore:
-    - gh-pages
-
+version: 2.1
 orbs:
   android: circleci/android@3.0.2
-
 jobs:
   build:
     executor:
@@ -15,11 +9,12 @@ jobs:
       tag: default
     steps:
       - checkout
+      - android/restore_gradle_cache
       - run:
           name: Execute Gradle
           command: |
             ./ci.sh
-
+      - android/save_gradle_cache
 workflows:
   build:
     jobs:

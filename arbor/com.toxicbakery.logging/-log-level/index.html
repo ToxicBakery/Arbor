@@ -1,265 +1,310 @@
-<html>
-  <head>
+<!DOCTYPE html>
+<html class="no-js">
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
     <title>LogLevel</title>
     <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../../";</script>
-    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
-    <link href="../../../styles/style.css" rel="Stylesheet">
-    <link href="../../../styles/logo-styles.css" rel="Stylesheet">
-    <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
-    <link href="../../../styles/main.css" rel="Stylesheet">
-    <script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
-    <script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
-    <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
-    <script type="text/javascript" src="../../../scripts/main.js" async="async"></script>
-  </head>
-  <body>
-    <div id="container">
-      <div id="leftColumn">
-        <div id="logo"></div>
-        <div id="paneSearch"></div>
-        <div id="sideMenu"></div>
-      </div>
-      <div id="main">
-        <div id="leftToggler"><span class="icon-toggler"></span></div>
-        <script type="text/javascript" src="../../../scripts/pages.js"></script>
-        <script type="text/javascript" src="../../../scripts/main.js"></script>
-        <div class="main-content" id="content" pageIds="com.toxicbakery.logging/LogLevel///PointingToDeclaration//683744596">
-          <div class="navigation-wrapper" id="navigation-wrapper">
-            <div class="breadcrumbs"><a href="../../index.html">arbor</a>/<a href="../index.html">com.toxicbakery.logging</a>/<a href="index.html">LogLevel</a></div>
-            <div class="pull-right d-flex">
-              <div class="filter-section" id="filter-section"><button class="platform-tag platform-selector common-like" data-active="" data-filter=":arbor:dokkaGhPages/commonMain">common</button></div>
-              <div id="searchBar"></div>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer="defer"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
+</head>
+<body>
+    <div class="root">
+    <nav class="navigation theme-dark" id="navigation-wrapper">
+            <a class="library-name--link" href="../../../index.html">
+                    arbor
+            </a>
+        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle"
+                type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+2.0.101-SNAPSHOT        </div>
+        <div class="navigation-controls">
+        <div class="filter-section filter-section_loading" id="filter-section">
+                <button class="platform-tag platform-selector common-like" data-active=""
+                        data-filter=":arbor/commonMain">common</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox"
+                        data-role="dropdown-toggle"
+                        aria-controls="platform-tags-listbox"
+                        aria-haspopup="listbox"
+                        aria-expanded="false"
+                        aria-label="Toggle source sets"
+                ></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox">
+                    <div class="dropdown--header"><span>Platform filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close platform filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option common-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":arbor/commonMain"
+                                       data-filter=":arbor/commonMain"/>
+                                <span class="checkbox--icon"></span>
+                                common
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </div>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button"
+                    type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                    <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list"
+                        data-role="dropdown-listbox">
+                        <div class="dropdown--header">
+                            <span>
+                                    arbor
+                            </span>
+                            <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                                <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                            </button>
+                        </div>
+                        <div class="sidebar--inner" id="sideMenu"></div>
+                    </ul>
+                    <div class="dropdown--overlay"></div>
+                </div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageIds="arbor::com.toxicbakery.logging/LogLevel///PointingToDeclaration//853740973">
+  <div class="breadcrumbs"><a href="../../../index.html">arbor</a><span class="delimiter">/</span><a href="../index.html">com.toxicbakery.logging</a><span class="delimiter">/</span><span class="current">LogLevel</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Log</span><wbr></wbr><span><span>Level</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">LogLevel</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">LogLevel</a><span class="token operator">&gt; </span></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="ENTRY">
+        <h2 class="">Entries</h2>
+        <div class="table"><a data-name="1196873950%2FClasslikes%2F853740973" anchor-label="D" id="1196873950%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-d/index.html">D</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1196873950%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-d/index.html">D</a></div></div></div></div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="cover ">
-            <h1 class="cover"><span>Log</span><wbr></wbr><span>Level</span></h1>
-            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace">enum <a href="index.html">LogLevel</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a>&lt;<a href="index.html">LogLevel</a>&gt; <span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+<a data-name="1581290864%2FClasslikes%2F853740973" anchor-label="V" id="1581290864%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-v/index.html">V</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1581290864%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-v/index.html">V</a></div></div></div></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="tabbedcontent">
-            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Entries">Entries</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Properties">Properties</button></div>
-            <div class="tabs-section-body">
-              <h2 class="tabbedcontent">Entries</h2>
-              <div class="table" data-togglable="Entries"><a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.D%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="D" id="%5Bcom.toxicbakery.logging%2FLogLevel.D%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-d/index.html">D</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.D%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-d/index.html">D</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.V%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="V" id="%5Bcom.toxicbakery.logging%2FLogLevel.V%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-v/index.html">V</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.V%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-v/index.html">V</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.I%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="I" id="%5Bcom.toxicbakery.logging%2FLogLevel.I%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-i/index.html">I</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.I%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-i/index.html">I</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.W%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="W" id="%5Bcom.toxicbakery.logging%2FLogLevel.W%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w/index.html">W</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.W%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-w/index.html">W</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.E%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="E" id="%5Bcom.toxicbakery.logging%2FLogLevel.E%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-e/index.html">E</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.E%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-e/index.html">E</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel.WTF%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" anchor-label="WTF" id="%5Bcom.toxicbakery.logging%2FLogLevel.WTF%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w-t-f/index.html">WTF</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel.WTF%2F%2F%2FPointingToDeclaration%2F%5D%2FClasslikes%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace"><div class="block"><a href="-w-t-f/index.html">WTF</a>()</div><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
+<a data-name="-2036873693%2FClasslikes%2F853740973" anchor-label="I" id="-2036873693%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-i/index.html">I</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2036873693%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-i/index.html">I</a></div></div></div></div>
                 </div>
               </div>
-              <h2 class="">Functions</h2>
-              <div class="table" data-togglable="Functions"><a data-name="%5Bkotlin%2FEnum%2FcompareTo%2F%23com.toxicbakery.logging.LogLevel%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" anchor-label="compareTo" id="%5Bkotlin%2FEnum%2FcompareTo%2F%23com.toxicbakery.logging.LogLevel%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FcompareTo%2F%23com.toxicbakery.logging.LogLevel%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">compareTo</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FEnum%2FcompareTo%2F%23com.toxicbakery.logging.LogLevel%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace">operator override fun <a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FcompareTo%2F%23com.toxicbakery.logging.LogLevel%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">compareTo</a>(other: <a href="index.html">LogLevel</a>): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bkotlin%2FEnum%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" anchor-label="equals" id="%5Bkotlin%2FEnum%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">equals</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FEnum%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace">operator override fun <a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2Fequals%2F%23kotlin.Any%3F%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">equals</a>(other: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a>?): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bkotlin%2FEnum%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" anchor-label="hashCode" id="%5Bkotlin%2FEnum%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">hashCode</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FEnum%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace">override fun <a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FhashCode%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">hashCode</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
-                </div>
-<a data-name="%5Bkotlin%2FEnum%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" anchor-label="toString" id="%5Bkotlin%2FEnum%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">toString</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bkotlin%2FEnum%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title"><div class="divergent-group" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain"><div class="with-platform-tags"><span class="pull-right"></span></div>
-
-  <div>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><div class="symbol monospace">open override fun <a href="-w-t-f/index.html#%5Bkotlin%2FEnum%2FtoString%2F%23%2FPointingToDeclaration%2F%5D%2FFunctions%2F683744596">toString</a>(): <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-  </div>
-</div>
-</div>
-                    </div>
-                  </div>
+            </div>
+          </div>
+<a data-name="-783445583%2FClasslikes%2F853740973" anchor-label="W" id="-783445583%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w/index.html">W</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-783445583%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-w/index.html">W</a></div></div></div></div>
                 </div>
               </div>
-              <h2 class="">Properties</h2>
-              <div class="table" data-togglable="Properties"><a data-name="%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" anchor-label="name" id="%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596">name</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><a data-name="%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" anchor-label="name" id="%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a><div class="symbol monospace">val <a href="index.html#%5Bcom.toxicbakery.logging%2FLogLevel%2Fname%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596">name</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
+            </div>
+          </div>
+<a data-name="-1167862497%2FClasslikes%2F853740973" anchor-label="E" id="-1167862497%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-e/index.html">E</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1167862497%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-e/index.html">E</a></div></div></div></div>
                 </div>
-<a data-name="%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" anchor-label="ordinal" id="%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a>
-                <div class="table-row" data-filterable-current=":arbor:dokkaGhPages/commonMain" data-filterable-set=":arbor:dokkaGhPages/commonMain">
-                  <div class="main-subrow keyValue ">
-                    <div class=""><span class="inline-flex"><a href="index.html#%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596">ordinal</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596"></span>
-                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                        </span></span></div>
-                    <div>
-                      <div class="platform-tags ">
-                        <div class="platform-tag common-like">common</div>
-                      </div>
-                      <div class="title">
-                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":arbor:dokkaGhPages/commonMain"><a data-name="%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" anchor-label="ordinal" id="%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596" data-filterable-set=":arbor:dokkaGhPages/commonMain"></a><div class="symbol monospace">val <a href="index.html#%5Bcom.toxicbakery.logging%2FLogLevel%2Fordinal%2F%23%2FPointingToDeclaration%2F%5D%2FProperties%2F683744596">ordinal</a>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
-                      </div>
-                    </div>
-                  </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1276879517%2FClasslikes%2F853740973" anchor-label="WTF" id="-1276879517%2FClasslikes%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-t-f/index.html">WTF</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1276879517%2FClasslikes%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><div class="block"><a href="-w-t-f/index.html">WTF</a></div></div></div></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="footer"><span class="go-to-top-icon"><a href="#content"></a></span><span>© 2020 Copyright</span><span class="pull-right"><span>Sponsored and developed by dokka</span><a href="https://github.com/Kotlin/dokka"><span class="padded-icon"></span></a></span></div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-1624785432%2FProperties%2F853740973" anchor-label="entries" id="-1624785432%2FProperties%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="entries.html"><span><span>entries</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1624785432%2FProperties%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="entries.html">entries</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.enums/-enum-entries/index.html">EnumEntries</a><span class="token operator">&lt;</span><a href="index.html">LogLevel</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns a representation of an immutable list of all enum entries, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-372974862%2FProperties%2F853740973" anchor-label="name" id="-372974862%2FProperties%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-t-f/index.html#-372974862%2FProperties%2F853740973"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-372974862%2FProperties%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-t-f/index.html#-372974862%2FProperties%2F853740973">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-739389684%2FProperties%2F853740973" anchor-label="ordinal" id="-739389684%2FProperties%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-w-t-f/index.html#-739389684%2FProperties%2F853740973"><span><span>ordinal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-739389684%2FProperties%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">val </span><a href="-w-t-f/index.html#-739389684%2FProperties%2F853740973">ordinal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-455214924%2FFunctions%2F853740973" anchor-label="valueOf" id="-455214924%2FFunctions%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value-of.html"><span>value</span><wbr></wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-455214924%2FFunctions%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="value-of.html"><span class="token function">valueOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">LogLevel</a></div><div class="brief "><p class="paragraph">Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="702959808%2FFunctions%2F853740973" anchor-label="values" id="702959808%2FFunctions%2F853740973" data-filterable-set=":arbor/commonMain"></a>
+          <div class="table-row" data-filterable-current=":arbor/commonMain" data-filterable-set=":arbor/commonMain">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="values.html"><span><span>values</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="702959808%2FFunctions%2F853740973"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":arbor/commonMain"><div class="symbol monospace"><span class="token keyword">fun </span><a href="values.html"><span class="token function">values</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="index.html">LogLevel</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array containing the constants of this enum type, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </body>
+  </div>
+</div>
+    <div class="footer">
+        <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+        <span>© 2025 Copyright</span>
+        <span class="pull-right">
+            <span>Generated by </span>
+            <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                <span>dokka</span>
+            </a>
+        </span>
+    </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
-

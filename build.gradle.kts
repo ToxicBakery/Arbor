@@ -1,3 +1,10 @@
+import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.targets.js.binaryen.BinaryenRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.binaryen.BinaryenRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin
+import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 
 plugins {
     alias(libs.plugins.gradle.android.application) apply false
@@ -30,9 +37,16 @@ subprojects {
 
     group = "com.ToxicBakery.logging"
     version = "2.0.$buildNumber" + if (isCI && isMaster) "" else "-SNAPSHOT"
+}
 
-    repositories {
-        google()
-        mavenCentral()
+plugins.apply {
+    withType<NodeJsRootPlugin> {
+        the<NodeJsRootExtension>().downloadBaseUrl = null
+    }
+    withType<YarnPlugin> {
+        the<YarnRootExtension>().downloadBaseUrl = null
+    }
+    withType<BinaryenRootPlugin> {
+        the<BinaryenRootExtension>().downloadBaseUrl = null
     }
 }

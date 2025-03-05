@@ -3,7 +3,7 @@ android-gradlePlugin = "8.7.0"
 detekt = "1.23.7"
 dokka = "2.0.0"
 jacoco = "0.8.9"
-kotlin = "2.1.0"
+kotlin = "2.1.10"
 mockito = "3.5.15"
 
 [libraries]

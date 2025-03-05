@@ -12,6 +12,7 @@ jacoco {
 }
 
 kotlin {
+    linuxX64()
     jvmToolchain(17)
     jvm()
     js(IR) {

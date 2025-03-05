@@ -4,10 +4,6 @@ plugins {
     id 'kotlin-multiplatform'
 }
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     jvmToolchain(17)
     jvm {

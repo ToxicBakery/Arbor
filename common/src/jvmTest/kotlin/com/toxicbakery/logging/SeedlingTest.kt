@@ -76,6 +76,33 @@ class SeedlingTest {
     }
 
     @Test
+    fun logDeferred() {
+        Arbor.d { "Hello, World" }
+        assertEquals("$defaultTag: Hello, World\n", bufferOut.toString())
+    }
+
+    @Test
+    fun logDeferred_error() {
+        Arbor.e { "Hello, World" }
+        assertEquals("$defaultTag: Hello, World\n", bufferErr.toString())
+    }
+
+    @Test
+    fun logDeferred_withException() {
+        Arbor.d(Exception("World")) { "Hello," }
+        assertTrue(
+            bufferOut.toString()
+                .startsWith("$defaultTag: Hello, java.lang.Exception: World")
+        )
+    }
+
+    @Test
+    fun logDeferred_withTag() {
+        Arbor.tag("tag").d { "Hello, World" }
+        assertEquals("tag: Hello, World\n", bufferOut.toString())
+    }
+    
+    @Test
     fun directLog_nullException() {
         seedling.log(Arbor.DEBUG, "tag", "msg", null)
         assertEquals("tag: msg\n", bufferOut.toString())
@@ -96,6 +123,25 @@ class SeedlingTest {
     @Test
     fun directLog_withTagAndException() {
         seedling.log(Arbor.DEBUG, "tag", "msg", Exception())
+        assertTrue(bufferOut.toString()
+            .startsWith("tag: msg java.lang.Exception"))
+    }
+
+    @Test
+    fun directLogDeferred_nullException() {
+        seedling.log(Arbor.DEBUG, "tag", { "msg" }, null)
+        assertEquals("tag: msg\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLogDeferred_withTag() {
+        seedling.log(level = Arbor.DEBUG, tag = "", msg = { "" })
+        assertEquals("\n", bufferOut.toString())
+    }
+
+    @Test
+    fun directLogDeferred_withTagAndException() {
+        seedling.log(Arbor.DEBUG, "tag", { "msg" }, Exception())
         assertTrue(bufferOut.toString()
             .startsWith("tag: msg java.lang.Exception"))
     }

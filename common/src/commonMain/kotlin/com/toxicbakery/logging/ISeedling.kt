@@ -29,6 +29,6 @@ interface ISeedling {
         tag: String,
         msg: () -> String,
         throwable: Throwable? = null,
-    ) = log(level, tag, msg())
+    ) = log(level, tag, msg(), throwable)
 
 }

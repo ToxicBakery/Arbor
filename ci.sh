@@ -7,7 +7,7 @@ if [ -z "$CIRCLE_PR_REPONAME" ]; then
   echo "signing.keyId=${SIGNING_KEY}" >> "gradle.properties"
   echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
   echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
-  gpg --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY maven.keystore.gpg
+  gpg --no-tty --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY --decrypt maven.keystore.gpg --output manve.keystore
   ./gradlew publish --no-daemon
 else
   ./gradlew build --no-daemon

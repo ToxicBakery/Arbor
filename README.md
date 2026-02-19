@@ -62,21 +62,24 @@ arbor(branch = tag) { "Custom Tag" }
 ```
 
 ## Install
-Arbor is a Kotlin Multiplatform project supporting JavaScript, JVM, and Android platforms.
+Arbor is a Kotlin Multiplatform project support multiple target platforms.
+
+Supported Platforms:
+ - Android
+ - JS
+ - JVM
+ - LinuxArm64
+ - LinuxX64
+ - WasmWasi
+
+Kotlin
+```kotlin
+implementation("com.ToxicBakery.logging:arbor:3.+")
+```
 
 Android
 ```groovy
-implementation "com.ToxicBakery.logging:arbor-android:1.+"
-```
-
-JavaScript
-```groovy
-implementation "com.ToxicBakery.logging:arbor-js:1.+"
-```
-
-JVM
-```groovy
-implementation "com.ToxicBakery.logging:arbor-jvm:1.+"
+implementation("com.ToxicBakery.logging:arbor-android:3.+")
 ```
 
 ## Migrating from Timber

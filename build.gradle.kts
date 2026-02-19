@@ -1,9 +1,11 @@
 plugins {
     alias(libs.plugins.gradle.android.application) apply false
     alias(libs.plugins.gradle.android.library) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.multiplatform) apply false
     alias(libs.plugins.gradle.detekt) apply false
     alias(libs.plugins.gradle.dokka) apply false
+    alias(libs.plugins.gradle.dokka.javadoc) apply false
 }
 
 buildscript {
@@ -28,6 +30,15 @@ subprojects {
     val isMaster = System.getenv()["CIRCLE_BRANCH"] == "master"
     val buildNumber = getGitCommitCount() ?: "0"
 
-    group = "com.ToxicBakery.logging"
-    version = "2.0.$buildNumber" + if (isCI && isMaster) "" else "-SNAPSHOT"
+    version = "3.0.$buildNumber" + if (isCI && isMaster) "" else "-SNAPSHOT"
+}
+
+tasks.register("cleanGhPages", Delete::class.java) {
+    group = "build"
+    tasks.named("clean").get().dependsOn(this)
+
+    delete(fileTree("gh-pages") {
+        include("**")
+        exclude("CNAME", "incdex.html")
+    })
 }

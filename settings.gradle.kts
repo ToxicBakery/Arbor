@@ -10,7 +10,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     // Do not allow modules to configure repositories
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         // KJS Requirements
         mavenCentral {
@@ -65,9 +65,11 @@ dependencyResolutionManagement {
 }
 
 
-rootProject.name = "Arbor"
+rootProject.name = "ArborLogging"
 
 include(
-    ":core",
-//    ":android",
+    ":arbor",
+    ":arbor-android",
+    ":examples:android",
+    ":examples:java",
 )

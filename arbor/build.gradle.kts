@@ -3,13 +3,15 @@
 import java.net.URI
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
+group = "com.ToxicBakery.logging"
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    `maven-publish`
-    signing
     alias(libs.plugins.gradle.detekt)
     alias(libs.plugins.gradle.dokka)
     jacoco
+    `maven-publish`
+    signing
 }
 
 jacoco {
@@ -135,34 +137,32 @@ detekt {
     config.setFrom("detekt.yml")
 }
 
-tasks.register("cleanGhPages", Delete::class.java) {
-    group = "build"
-    tasks.named("clean").get().dependsOn(this)
-
-    delete(fileTree("gh-pages") {
-        include("**")
-        exclude("CNAME", "incdex.html")
-    })
-}
-
 dokka {
-    dokkaPublications.html {
-        moduleName.set(project.name)
-        moduleVersion.set(project.version.toString())
-        outputDirectory.set(layout.projectDirectory.dir("gh-pages"))
-        failOnWarning.set(false)
-        suppressInheritedMembers.set(false)
-        suppressObviousFunctions.set(true)
-        offlineMode.set(false)
+    dokkaPublications {
+        html {
+            moduleName.set(project.name)
+            moduleVersion.set(project.version.toString())
+            outputDirectory.set(rootProject.layout.projectDirectory.dir("gh-pages/${project.name}"))
+            failOnWarning.set(false)
+            suppressInheritedMembers.set(false)
+            suppressObviousFunctions.set(true)
+            offlineMode.set(false)
+        }
     }
 }
 
 val tasksNeedingSigning = listOf(
     tasks.register("dokkaJavadocCommonJar", Jar::class.java) {
         group = "publishing"
-        dependsOn(tasks.getByName("dokkaGenerate"))
+        dependsOn(tasks.getByName("dokkaGenerateHtml"))
         archiveClassifier.set("javadoc")
-        from(layout.buildDirectory.dir("dokka/html"))
+        from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
+    },
+    tasks.register("dokkaHtmlDocCommonJar", Jar::class.java) {
+        group = "publishing"
+        dependsOn(tasks.getByName("dokkaGenerateHtml"))
+        archiveClassifier.set("html-doc")
+        from(tasks.dokkaGeneratePublicationHtml.flatMap { it.outputDirectory })
     },
 )
 
@@ -194,25 +194,10 @@ publishing {
                 }
             }
         }
-    }
 
-//    afterEvaluate {
-//        publications.named("js") {
-//            artifact tasks.named("dokkaJavadocCommonJar")
-//        }
-//        publications.named("jvm") {
-//            artifact tasks.named("dokkaJavadocCommonJar")
-//        }
-//        publications.named("wasmJs") {
-//            artifact tasks.named("dokkaJavadocCommonJar")
-//        }
-//        publications.named("wasmWasi") {
-//            artifact tasks.named("dokkaJavadocCommonJar")
-//        }
-//        publications.named("kotlinMultiplatform") {
-//            artifact tasks.named("dokkaJavadocCommonJar")
-//        }
-//    }
+        // Add all additional jars to the publication
+        tasksNeedingSigning.forEach(::artifact)
+    }
 
     repositories {
         val releaseUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"

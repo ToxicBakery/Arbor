@@ -95,11 +95,6 @@ val tasksNeedingSigning = listOf(
         archiveClassifier.set("javadoc")
         from(tasks.dokkaGeneratePublicationJavadoc.flatMap { it.outputDirectory })
     },
-//    tasks.register("androidSourcesJar", Jar::class.java) {
-//        group = "publishing"
-//        archiveClassifier.set("sources")
-//        from(android.sourceSets.getByName("main").kotlin.directories)
-//    }
 )
 
 publishing {

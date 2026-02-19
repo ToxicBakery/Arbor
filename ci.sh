@@ -1,3 +1,6 @@
+set -x
+set -e
+
 echo "" >> gradle.properties
 echo "org.gradle.parallel=false" >> gradle.properties
 echo "kotlin.incremental=false" >> gradle.properties
@@ -7,7 +10,7 @@ if [ -z "$CIRCLE_PR_REPONAME" ]; then
   echo "signing.keyId=${SIGNING_KEY}" >> "gradle.properties"
   echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
   echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
-  gpg --no-tty --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY --decrypt maven.keystore.gpg --output manve.keystore
+  gpg --no-tty --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY --decrypt maven.keystore.gpg
   ./gradlew publish --no-daemon
 else
   ./gradlew build --no-daemon

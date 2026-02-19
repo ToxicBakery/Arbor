@@ -13,9 +13,6 @@ else
   ./gradlew build --no-daemon
 fi
 
-# Code Cov
-bash <(curl -s https://codecov.io/bash)
-
 # GH Pages
 if [ -z "$CIRCLE_PR_REPONAME" ] && [ "master" = "$CIRCLE_BRANCH" ]; then
   git config --global user.email $GH_EMAIL

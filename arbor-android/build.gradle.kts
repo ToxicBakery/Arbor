@@ -154,6 +154,11 @@ publishing {
     }
 }
 
+signing {
+    isRequired = false
+    sign(publishing.publications)
+}
+
 tasks.register("jacocoTestReportAndroid", JacocoReport::class.java) {
     group = "jacoco"
     dependsOn.add("test")

@@ -1,3 +1,4 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
@@ -64,13 +65,9 @@ dependencyResolutionManagement {
 }
 
 
-rootProject.name = "ArborLogging"
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+rootProject.name = "Arbor"
 
 include(
-    ":common",
-    ":android",
+    ":core",
+//    ":android",
 )
-
-project(":common").name = "arbor"

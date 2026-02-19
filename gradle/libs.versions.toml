@@ -1,12 +1,16 @@
 [versions]
-android-gradlePlugin = "8.7.0"
+android-gradlePlugin = "9.0.0"
 detekt = "1.23.7"
-dokka = "2.0.0"
+dokka = "2.1.0"
 jacoco = "0.8.9"
-kotlin = "2.1.10"
+kotlin = "2.3.0"
 mockito = "3.5.15"
 
 [libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
+kotlin-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlin" }
+kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
@@ -17,3 +21,5 @@ gradle-android-library = { id = "com.android.library", version.ref = "android-gr
 gradle-android-kotlin = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 gradle-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 gradle-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-multiplatform-android = { id = "com.android.kotlin.multiplatform.library", version.ref = "android-gradlePlugin" }

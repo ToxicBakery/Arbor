@@ -6,24 +6,11 @@ import com.toxicbakery.logging.Arbor.INFO
 import com.toxicbakery.logging.Arbor.VERBOSE
 import com.toxicbakery.logging.Arbor.WARNING
 import com.toxicbakery.logging.Arbor.WTF
-import kotlin.js.Console
 
 /**
- * Basic logger that prints messages to the JavaScript Console. Levels are mapped as:
- *
- * [Arbor.DEBUG] -> [Console.log]
- *
- * [Arbor.INFO] -> [Console.info]
- *
- * [Arbor.VERBOSE] -> [Console.info]
- *
- * [Arbor.WARNING] -> [Console.warn]
- *
- * [Arbor.ERROR] -> [Console.error]
- *
- * [Arbor.WTF] -> [Console.error]
+ * Basic logger that prints messages to the JavaScript Console.
  */
-class Seedling : ISeedling {
+public class Seedling : ISeedling {
 
     override val tag: String
         get() = ""
@@ -70,5 +57,4 @@ class Seedling : ISeedling {
             WTF -> console.error(throwable, message)
         }
     }
-
 }

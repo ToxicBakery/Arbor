@@ -3,17 +3,17 @@ package com.toxicbakery.logging
 /**
  * The root logging interface.
  */
-interface ISeedling {
+public interface ISeedling {
 
     /**
      * A static or dynamically generated tag for logging.
      */
-    val tag: String
+    public val tag: String
 
     /**
      * A request to perform logging.
      */
-    fun log(
+    public fun log(
         level: Int,
         tag: String = "",
         msg: String,
@@ -24,11 +24,11 @@ interface ISeedling {
     /**
      * A request to perform logging.
      */
-    fun log(
+    public fun log(
         level: Int,
         tag: String,
         msg: () -> String,
         throwable: Throwable? = null,
-    ) = log(level, tag, msg(), throwable)
+    ): Unit = log(level, tag, msg(), throwable)
 
 }

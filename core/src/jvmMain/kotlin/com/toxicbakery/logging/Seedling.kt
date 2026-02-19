@@ -10,7 +10,7 @@ import java.io.PrintStream
  * Arbor.sow(Seedling())
  * ```
  */
-class Seedling @JvmOverloads constructor(
+public class Seedling @JvmOverloads constructor(
     private val printStreamErr: PrintStream = System.err,
     private val printStreamOut: PrintStream = System.out,
     private val callStackIndex: Int = CALL_STACK_INDEX
@@ -64,12 +64,12 @@ class Seedling @JvmOverloads constructor(
         if (throwable == null) this
         else "$this ${throwable.prettyPrint()}"
 
-    companion object {
+    public companion object {
         private const val CALL_STACK_INDEX = -1
         private const val INVALID_STACK = "Synthetic stacktrace didn't have enough elements: are you using proguard?"
 
         @JvmStatic
-        fun Throwable.prettyPrint(): String = stackTrace
+        public fun Throwable.prettyPrint(): String = stackTrace
             .mapIndexed { index, stackTraceElement ->
                 (if (index == 0) javaClass.name.plus(if (message == null) "\n" else ": $message\n") else "")
                     .plus("\tat $stackTraceElement")

@@ -10,11 +10,19 @@ jobs:
     steps:
       - checkout
       - android/restore_gradle_cache
+      - restore_cache:
+          name: Restore Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
       - run:
           name: Execute Gradle
           command: |
             ./ci.sh
       - android/save_gradle_cache
+      - save_cache:
+          name: Save Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
+          paths:
+            - ~/.konan
 workflows:
   build:
     jobs:

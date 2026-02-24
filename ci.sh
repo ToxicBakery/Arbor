@@ -4,6 +4,7 @@ set -e
 # Ensure a blank new line on gradle.properties
 echo "" >> "gradle.properties"
 echo "kotlin.incremental=false" >> "gradle.properties"
+echo "org.gradle.console=plain" >> "gradle.properties"
 
 # Build
 if [ -z "${CIRCLE_PR_REPONAME}" ]; then

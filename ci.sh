@@ -1,23 +1,28 @@
-echo "" >> gradle.properties
-echo "org.gradle.parallel=false" >> gradle.properties
-echo "kotlin.incremental=false" >> gradle.properties
+set -x
+set -e
+
+# Ensure a blank new line on gradle.properties
+echo "" >> "gradle.properties"
+echo "kotlin.incremental=false" >> "gradle.properties"
+echo "org.gradle.console=plain" >> "gradle.properties"
 
 # Build
-if [ -z "$CIRCLE_PR_REPONAME" ]; then
+if [ -z "${CIRCLE_PR_REPONAME}" ]; then
+  echo "branch=${CIRCLE_BRANCH}" >> "gradle.properties"
+  echo "ci=true" >> "gradle.properties"
+  echo "mavenCentralUsername=${SONATYPE_USERNAME}" >> "gradle.properties"
+  echo "mavenCentralPassword=${SONATYPE_PASSWORD}" >> "gradle.properties"
   echo "signing.keyId=${SIGNING_KEY}" >> "gradle.properties"
   echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
   echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
-  gpg --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY maven.keystore.gpg
-  ./gradlew build dokkaHtml publish --no-daemon
+  gpg --no-tty --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY --decrypt maven.keystore.gpg > maven.keystore
+  ./gradlew publish --no-daemon
 else
   ./gradlew build --no-daemon
 fi
 
-# Code Cov
-bash <(curl -s https://codecov.io/bash)
-
 # GH Pages
-if [ -z "$CIRCLE_PR_REPONAME" ] && [ "master" = "$CIRCLE_BRANCH" ]; then
+if [ -z "${CIRCLE_PR_REPONAME}" ] && [ "master" = "${CIRCLE_BRANCH}" ]; then
   git config --global user.email $GH_EMAIL
   git config --global user.name $GH_NAME
   cp -r .circleci common/gh-pages/.circleci

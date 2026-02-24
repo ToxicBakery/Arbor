@@ -1,3 +1,4 @@
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
@@ -9,7 +10,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     // Do not allow modules to configure repositories
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         // KJS Requirements
         mavenCentral {
@@ -66,11 +67,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "ArborLogging"
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
 include(
-    ":common",
-    ":android",
+    ":arbor",
+    ":arbor-android",
+    ":examples:android",
+    ":examples:java",
 )
-
-project(":common").name = "arbor"

@@ -74,12 +74,12 @@ Supported Platforms:
 
 Kotlin
 ```kotlin
-implementation("com.ToxicBakery.logging:arbor:3.+")
+implementation("com.toxicbakery.logging:arbor:3.+")
 ```
 
 Android
 ```groovy
-implementation("com.ToxicBakery.logging:arbor-android:3.+")
+implementation("com.toxicbakery.logging:arbor-android:3.+")
 ```
 
 ## Migrating from Timber

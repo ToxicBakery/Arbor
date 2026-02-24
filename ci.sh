@@ -25,8 +25,8 @@ fi
 if [ -z "${CIRCLE_PR_REPONAME}" ] && [ "master" = "${CIRCLE_BRANCH}" ]; then
   git config --global user.email $GH_EMAIL
   git config --global user.name $GH_NAME
-  cp -r .circleci common/gh-pages/.circleci
-  cd common/gh-pages
+  cp -r .circleci gh-pages/.circleci
+  cd gh-pages
   git init
   git checkout --orphan gh-pages
   git add -A

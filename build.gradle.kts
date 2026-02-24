@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.gradle.detekt) apply false
     alias(libs.plugins.gradle.dokka) apply false
     alias(libs.plugins.gradle.dokka.javadoc) apply false
+    alias(libs.plugins.gradle.maven.publish) apply false
 }
 
 buildscript {
@@ -26,7 +27,7 @@ fun getGitCommitCount(): String? {
 }
 
 subprojects {
-    val isCI = System.getenv()["CI"].orEmpty().isNotEmpty()
+    val isCI = "${findProperty("ci")}" == "true"
     val isMaster = System.getenv()["CIRCLE_BRANCH"] == "master"
     val buildNumber = getGitCommitCount() ?: "0"
 

@@ -1,14 +1,13 @@
+import com.vanniktech.maven.publish.DeploymentValidation
 import io.gitlab.arturbosch.detekt.Detekt
-import java.net.URI
 
 plugins {
     alias(libs.plugins.gradle.android.library)
     alias(libs.plugins.gradle.detekt)
     alias(libs.plugins.gradle.dokka)
     alias(libs.plugins.gradle.dokka.javadoc)
+    alias(libs.plugins.gradle.maven.publish)
     jacoco
-    `maven-publish`
-    signing
 }
 
 group = "com.ToxicBakery.logging"
@@ -34,11 +33,6 @@ android {
     }
     testOptions {
         unitTests.isReturnDefaultValues = true
-    }
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
     }
 }
 
@@ -97,61 +91,40 @@ val tasksNeedingSigning = listOf(
     },
 )
 
-publishing {
-    publications {
-        create("release", MavenPublication::class.java) {
-            pom {
-                description = providers.gradleProperty("POM_DESCRIPTION")
-                name = "${providers.gradleProperty("POM_NAME")}-Android"
-                url = providers.gradleProperty("POM_URL")
-                scm {
-                    url = providers.gradleProperty("POM_SCM_URL")
-                    connection = providers.gradleProperty("POM_SCM_CONNECTION")
-                    developerConnection = providers.gradleProperty("POM_SCM_DEV_CONNECTION")
-                }
-                licenses {
-                    license {
-                        name = providers.gradleProperty("POM_LICENCE_NAME")
-                        url = providers.gradleProperty("POM_LICENCE_URL")
-                        distribution = providers.gradleProperty("POM_LICENCE_DIST")
-                    }
-                }
-                developers {
-                    developer {
-                        id = providers.gradleProperty("POM_DEVELOPER_ID")
-                        name = providers.gradleProperty("POM_DEVELOPER_NAME")
-                        email = providers.gradleProperty("POM_DEVELOPER_EMAIL")
-                        organization = providers.gradleProperty("POM_DEVELOPER_ORGANIZATION")
-                        organizationUrl = providers.gradleProperty("POM_DEVELOPER_ORGANIZATION_URL")
-                    }
-                }
-            }
+mavenPublishing {
+    coordinates("${project.group}", project.name, "${project.version}")
 
-            afterEvaluate {
-                from(components["release"])
-            }
-
-            tasksNeedingSigning.forEach(::artifact)
-        }
+    if ("${findProperty("ci")}" == "true") {
+        publishToMavenCentral(automaticRelease = false, validateDeployment = DeploymentValidation.NONE)
+        signAllPublications()
     }
 
-    repositories {
-        val releaseUrl = "https://central.sonatype.com/api/v1/publisher/deployments/download/"
-        val snapshotUrl = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
-
-        maven {
-            url = URI.create(if (!"$version".contains("SNAPSHOT")) releaseUrl else snapshotUrl)
-            credentials {
-                username = System.getenv()["SONATYPE_USERNAME"].orEmpty()
-                password = System.getenv()["SONATYPE_PASSWORD"].orEmpty()
+    pom {
+        description = providers.gradleProperty("POM_DESCRIPTION")
+        name = "${providers.gradleProperty("POM_NAME")}-Android"
+        url = providers.gradleProperty("POM_URL")
+        scm {
+            url = providers.gradleProperty("POM_SCM_URL")
+            connection = providers.gradleProperty("POM_SCM_CONNECTION")
+            developerConnection = providers.gradleProperty("POM_SCM_DEV_CONNECTION")
+        }
+        licenses {
+            license {
+                name = providers.gradleProperty("POM_LICENCE_NAME")
+                url = providers.gradleProperty("POM_LICENCE_URL")
+                distribution = providers.gradleProperty("POM_LICENCE_DIST")
+            }
+        }
+        developers {
+            developer {
+                id = providers.gradleProperty("POM_DEVELOPER_ID")
+                name = providers.gradleProperty("POM_DEVELOPER_NAME")
+                email = providers.gradleProperty("POM_DEVELOPER_EMAIL")
+                organization = providers.gradleProperty("POM_DEVELOPER_ORGANIZATION")
+                organizationUrl = providers.gradleProperty("POM_DEVELOPER_ORGANIZATION_URL")
             }
         }
     }
-}
-
-signing {
-    isRequired = false
-    sign(publishing.publications)
 }
 
 tasks.register("jacocoTestReportAndroid", JacocoReport::class.java) {

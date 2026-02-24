@@ -5,6 +5,7 @@ android-constraintlayout = "2.2.1"
 android-gradlePlugin = "9.0.0"
 detekt = "1.23.7"
 dokka = "2.1.0"
+gradle-maven-publish = "0.36.0"
 jacoco = "0.8.14"
 kotlin = "2.3.0"
 mockito = "3.5.15"
@@ -26,5 +27,6 @@ gradle-android-library = { id = "com.android.library", version.ref = "android-gr
 gradle-detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 gradle-dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 gradle-dokka-javadoc = { id = "org.jetbrains.dokka-javadoc", version.ref = "dokka" }
+gradle-maven-publish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

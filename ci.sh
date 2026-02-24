@@ -1,12 +1,16 @@
 set -x
 set -e
 
-echo "" >> gradle.properties
-echo "org.gradle.parallel=false" >> gradle.properties
-echo "kotlin.incremental=false" >> gradle.properties
+# Ensure a blank new line on gradle.properties
+echo "" >> "gradle.properties"
+echo "kotlin.incremental=false" >> "gradle.properties"
 
 # Build
-if [ -z "$CIRCLE_PR_REPONAME" ]; then
+if [ -z "${CIRCLE_PR_REPONAME}" ]; then
+  echo "branch=${CIRCLE_BRANCH}" >> "gradle.properties"
+  echo "ci=true" >> "gradle.properties"
+  echo "mavenCentralUsername=${SONATYPE_USERNAME}" >> "gradle.properties"
+  echo "mavenCentralPassword=${SONATYPE_PASSWORD}" >> "gradle.properties"
   echo "signing.keyId=${SIGNING_KEY}" >> "gradle.properties"
   echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
   echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
@@ -17,7 +21,7 @@ else
 fi
 
 # GH Pages
-if [ -z "$CIRCLE_PR_REPONAME" ] && [ "master" = "$CIRCLE_BRANCH" ]; then
+if [ -z "${CIRCLE_PR_REPONAME}" ] && [ "master" = "${CIRCLE_BRANCH}" ]; then
   git config --global user.email $GH_EMAIL
   git config --global user.name $GH_NAME
   cp -r .circleci common/gh-pages/.circleci

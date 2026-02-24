@@ -166,7 +166,7 @@ val tasksNeedingSigning = listOf(
 )
 
 mavenPublishing {
-    coordinates("${project.group}", project.name, "${project.version}")
+    coordinates("com.toxicbakery.logging", project.name, "${project.version}")
 
     if ("${findProperty("ci")}" == "true") {
         publishToMavenCentral(automaticRelease = false, validateDeployment = DeploymentValidation.NONE)

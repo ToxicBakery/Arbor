@@ -9,7 +9,6 @@ jobs:
       tag: default
     steps:
       - checkout
-      - android/restore-build-cache
       - android/restore_gradle_cache
       - restore_cache:
           name: Restore Konan
@@ -19,7 +18,6 @@ jobs:
           command: |
             ./ci.sh
       - android/save_gradle_cache
-      - android/save-build-cache
       - save_cache:
           name: Save Konan
           key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}

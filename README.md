@@ -1,13 +1,8 @@
 ![arbor](https://github.com/ToxicBakery/Arbor/blob/master/art/arbor.png?raw=true)
 
 # Arbor [![CircleCI](https://circleci.com/gh/ToxicBakery/Arbor.svg?style=svg)](https://circleci.com/gh/ToxicBakery/Arbor) [![Maven Central](https://img.shields.io/maven-metadata/v/https/repo1.maven.org/maven2/com/toxicbakery/logging/arbor/maven-metadata.xml.svg)](https://oss.sonatype.org/content/repositories/releases/com/ToxicBakery/logging/)
-Timber like logging implementation for Kotlin Multiplatform.
-
-## Purpose
-This library was built as a practical experiment with Kotlin Multiplatform and specifically the new single module approach. Despite Kotlin's excellent documentation it was unclear how to properly publish all artifacts to Maven such as sources and documentation. Hopefully this project provides a more complete template for others to use.
-
-## API
-Arbor follows a very similar usage pattern to [Timber](https://github.com/jakewharton/timber). Key differences exist in feature support and terminology which was done purely because I had a thesaurus laying around.
+Logging implementation for Kotlin Multiplatform. Unlike most multiplatform logging implementations, Android is 
+isolated to its own optional module to allow for pure JVM libraries to be mixed with Android libraries and applications.
 
 ##### Sow Your Seedling
 Seedlings are platform specific logging implementations such as using `Logcat` in Android and `println` in JavaScript.
@@ -62,37 +57,40 @@ arbor(branch = tag) { "Custom Tag" }
 ```
 
 ## Install
-Arbor is a Kotlin Multiplatform project support multiple target platforms.
+Arbor is a Kotlin Multiplatform project supporting multiple target platforms.
 
-Supported Platforms:
- - Android
- - JS
- - JVM
- - LinuxArm64
- - LinuxX64
- - WasmWasi
+**Supported Platforms:**
+ - js
+ - jvm
+ - linuxArm64
+ - linuxX64
+ - macosX64()
+ - macosArm64()
+ - iosX64()
+ - iosArm64()
+ - iosSimulatorArm64()
+ - watchosArm32()
+ - watchosArm64()
+ - watchosSimulatorArm64()
+ - watchosDeviceArm64()
+ - watchosX64()
+ - tvosArm64()
+ - tvosSimulatorArm64()
+ - tvosX64()
+ - mingwX64
+ - wasmJS
+ - wasmWasi
+
+**Optional Platforms:**
+ - android
 
 Kotlin
 ```kotlin
-implementation("com.toxicbakery.logging:arbor:3.+")
+implementation("com.toxicbakery.logging:arbor:<version>")
 ```
 
 Android
-```groovy
-implementation("com.toxicbakery.logging:arbor-android:3.+")
-```
-
-## Migrating from Timber
-Library migrations can be difficult. I've written a drop in kotlin file that can be placed anywhere in your application for a generally 1:1 mapping of Timber to Arbor. Notably missing is extension functions for string formatting.
-
-https://gist.github.com/ToxicBakery/e55f55ec73450257901431c06eb1e969
-
-Alternately, Kotlin can be leveraged more directly if you prefer.
-
 ```kotlin
-package timber.log
-
-typealias Timber = com.toxicbakery.logging.Arbor
+implementation("com.toxicbakery.logging:arbor:<version>")
+implementation("com.toxicbakery.logging:arbor-android:<version>")
 ```
-
-This has a drawback in that `Timber.tag(...)` calls will not work.

@@ -16,9 +16,9 @@ if [ -z "${CIRCLE_PR_REPONAME}" ]; then
   echo "signing.password=${SIGNING_PASSWORD}" >> "gradle.properties"
   echo "signing.secretKeyRingFile=../maven.keystore" >> "gradle.properties"
   gpg --no-tty --cipher-algo AES256 --yes --batch --passphrase=$ENC_FILE_KEY --decrypt maven.keystore.gpg > maven.keystore
-  ./gradlew kotlinUpgradePackageLock publish --no-daemon
+  ./gradlew kotlinUpgradePackageLock -PLibrariesOnly=true publish
 else
-  ./gradlew kotlinUpgradePackageLock build --no-daemon
+  ./gradlew kotlinUpgradePackageLock -PLibrariesOnly=true build
 fi
 
 # GH Pages

@@ -296,7 +296,7 @@ class ArborTest {
         val seedling = TestSeedling()
         Arbor.sow(seedling)
         val tag = Arbor.tag("tag")
-        arbor(tag = tag) { "msg" }
+        arbor(branch = tag) { "msg" }
         assertEquals("${Arbor.DEBUG} tag msg", seedling.log)
     }
 

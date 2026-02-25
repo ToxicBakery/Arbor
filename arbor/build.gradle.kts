@@ -19,6 +19,7 @@ jacoco {
 
 kotlin {
     explicitApi()
+    mingwX64()
     linuxX64()
     linuxArm64()
     jvm()
@@ -38,6 +39,20 @@ kotlin {
     wasmWasi {
         nodejs()
     }
+
+    macosX64()
+    macosArm64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+    watchosArm32()
+    watchosArm64()
+    watchosSimulatorArm64()
+    watchosDeviceArm64()
+    watchosX64()
+    tvosArm64()
+    tvosSimulatorArm64()
+    tvosX64()
 
     sourceSets {
         val commonMain by getting {

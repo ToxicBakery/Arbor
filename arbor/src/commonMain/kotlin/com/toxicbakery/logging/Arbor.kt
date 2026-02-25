@@ -53,7 +53,7 @@ public object Arbor {
         get() = perennial
 
     /**
-     * Create a tagged seedling. Tags use a shallow copy snapshot of the current forest for all logging operations.
+     * Create a tagged seedling.
      */
     @JvmStatic
     public fun tag(tag: String): Branch = Branch(tag)
@@ -304,15 +304,17 @@ public object Arbor {
 
 }
 
-public enum class LogLevel { D, V, I, W, E, WTF }
+private val defaultBranch: Branch = Arbor.tag("default")
 
-private val defaultBranch: Branch = Arbor.tag("2143fef6-18e0-4341-a1de-b043ba5e32cd")
-
+/**
+ * Utility function to bypass logging to all branches. This may be useful in narrow situations such as forcing log
+ * output in production to a specific branch.
+ */
 public fun arbor(
     logLevel: LogLevel = LogLevel.D,
-    tag: Branch = defaultBranch,
+    branch: Branch = defaultBranch,
     message: () -> String
-): Unit = if (tag == defaultBranch) {
+): Unit = if (branch === defaultBranch) {
     when (logLevel) {
         LogLevel.D -> Arbor.d(message)
         LogLevel.V -> Arbor.v(message)
@@ -323,11 +325,11 @@ public fun arbor(
     }
 } else {
     when (logLevel) {
-        LogLevel.D -> tag.d(message)
-        LogLevel.V -> tag.v(message)
-        LogLevel.I -> tag.i(message)
-        LogLevel.W -> tag.w(message)
-        LogLevel.E -> tag.e(message)
-        LogLevel.WTF -> tag.wtf(message)
+        LogLevel.D -> branch.d(message)
+        LogLevel.V -> branch.v(message)
+        LogLevel.I -> branch.i(message)
+        LogLevel.W -> branch.w(message)
+        LogLevel.E -> branch.e(message)
+        LogLevel.WTF -> branch.wtf(message)
     }
 }

@@ -1,0 +1,36 @@
+version: 2.1
+orbs:
+  android: circleci/android@3.2.0
+jobs:
+  build:
+    executor:
+      name: android/android_machine
+      resource_class: large
+      tag: default
+    steps:
+      - checkout
+      - android/restore_gradle_cache
+      - restore_cache:
+          name: Restore Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
+      - run:
+          name: Execute Gradle
+          command: |
+            ./ci.sh
+      - android/save_gradle_cache
+      - save_cache:
+          name: Save Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
+          paths:
+            - ~/.konan
+workflows:
+  build:
+    jobs:
+      - build:
+          context: Sonatype
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore:
+                - gh-pages

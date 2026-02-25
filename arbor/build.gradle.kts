@@ -32,6 +32,9 @@ kotlin {
         nodejs()
         useEsModules()
     }
+    wasmJs {
+        nodejs()
+    }
     wasmWasi {
         nodejs()
     }

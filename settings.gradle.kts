@@ -70,6 +70,7 @@ rootProject.name = "ArborLogging"
 include(
     ":arbor",
     ":arbor-android",
+    ":arbor-ktor",
     ":examples:android",
     ":examples:java",
 )

@@ -8,18 +8,20 @@ dokka = "2.1.0"
 gradle-maven-publish = "0.36.0"
 jacoco = "0.8.14"
 kotlin = "2.3.0"
+ktor = "3.4.0"
 mockito = "3.5.15"
 
 [libraries]
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "android-appcompat"}
-androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "android-constraintlayout"}
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "android-appcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "android-constraintlayout" }
+jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlin" }
 kotlin-test-js = { module = "org.jetbrains.kotlin:kotlin-test-js", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+ktor-utils = { module = "io.ktor:ktor-utils", version.ref = "ktor" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-jacoco-core = { module = "org.jacoco:org.jacoco.core", version.ref = "jacoco" }
 
 [plugins]
 gradle-android-application = { id = "com.android.application", version.ref = "android-gradlePlugin" }

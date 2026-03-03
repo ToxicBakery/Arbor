@@ -3,8 +3,8 @@ package com.toxicbakery.logging
 import java.io.PrintStream
 
 /**
- * Basic logger that prints [Error] and [WTF] messages to the [System.err] stream. All other logs are printed to the
- * [System.out] stream. Messages are line printed in the format of `TAG: Message`.
+ * Basic logger that prints [Arbor.ERROR] and [Arbor.WTF] messages to the [System.err] stream. All other logs are
+ * printed to the [System.out] stream. Messages are line printed in the format of `TAG: Message`.
  *
  * ```
  * Arbor.sow(Seedling())
@@ -43,7 +43,7 @@ public class Seedling @JvmOverloads constructor(
         require(level >= Arbor.DEBUG && level <= Arbor.WTF)
         tag.withMessage(msg)
             .let { taggedMessage ->
-                if (args == null || args.isEmpty()) taggedMessage
+                if (args.isNullOrEmpty()) taggedMessage
                 else taggedMessage.format(*args)
             }
             .withThrowable(throwable)

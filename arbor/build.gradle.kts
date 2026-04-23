@@ -32,6 +32,7 @@ kotlin {
         nodejs()
         useEsModules()
     }
+    macosArm64()
     macosX64()
     mingwX64()
     wasmJs {

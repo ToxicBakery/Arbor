@@ -10,7 +10,7 @@ This library was built as a practical experiment with Kotlin Multiplatform and s
 Arbor follows a very similar usage pattern to [Timber](https://github.com/jakewharton/timber). Key differences exist in feature support and terminology which was done purely because I had a thesaurus laying around.
 
 ##### Sow Your Seedling
-Seedlings are platform specific logging implementations such as using `Logcat` in Android and `println` in JavaScript.
+Seedlings are platform specific logging implementations such as using `Logcat` in Android, `NSLog` in iOS, and `println` in JavaScript.
 
 Android
 ```kotlin
@@ -23,6 +23,11 @@ Arbor.sow(Seedling())
 ```
 
 JVM
+```kotlin
+Arbor.sow(Seedling())
+```
+
+iOS
 ```kotlin
 Arbor.sow(Seedling())
 ```
@@ -66,10 +71,15 @@ Arbor is a Kotlin Multiplatform project support multiple target platforms.
 
 Supported Platforms:
  - Android
+ - iOS (Arm64, X64, SimulatorArm64)
  - JS
  - JVM
  - LinuxArm64
  - LinuxX64
+ - MacosArm64
+ - MacosX64
+ - MingwX64
+ - WasmJs
  - WasmWasi
 
 Kotlin

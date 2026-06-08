@@ -34,9 +34,19 @@ kotlin {
     }
     macosArm64()
     macosX64()
-    iosArm64()
-    iosX64()
-    iosSimulatorArm64()
+    // Expose a static framework named "ArborKit" so the examples/ios sample can link Arbor from Xcode via
+    // the :arbor:embedAndSignAppleFrameworkForXcode task. The name differs from the "Arbor" class to avoid a
+    // module/type collision in Swift. Framework binaries are not published to Maven; only klibs are.
+    listOf(
+        iosArm64(),
+        iosX64(),
+        iosSimulatorArm64(),
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "ArborKit"
+            isStatic = true
+        }
+    }
     mingwX64()
     wasmJs {
         nodejs()

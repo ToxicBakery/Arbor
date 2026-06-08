@@ -24,8 +24,11 @@ public class Seedling internal constructor(
     private val write: (String) -> Unit,
 ) : ISeedling {
 
-    // Pass the message as an argument rather than the format string so `%` characters are never interpreted.
-    public constructor() : this(write = { message -> NSLog("%@", message) })
+    // Log via NSLog without its variadic argument list: Kotlin/Native does not marshal a Kotlin String into a
+    // C variadic call as an Obj-C object, so `NSLog("%@", message)` reads the string bytes as a pointer and
+    // crashes. Instead pass the message as the (non-variadic, properly bridged) format string with every `%`
+    // escaped to `%%`, so no conversion specifier is ever interpreted.
+    public constructor() : this(write = { message -> NSLog(message.replace("%", "%%")) })
 
     override val tag: String
         get() = ""

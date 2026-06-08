@@ -1,0 +1,10 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.toxicbakery.logging////PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/index.html
+$dokka.location:com.toxicbakery.logging/KtorLogProvider///PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-provider/index.html
+$dokka.location:com.toxicbakery.logging/KtorLogProvider/getLogger/#kotlin.String/PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-provider/get-logger.html
+$dokka.location:com.toxicbakery.logging/KtorLogSeedling///PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-seedling/index.html
+$dokka.location:com.toxicbakery.logging/KtorLogSeedling/KtorLogSeedling/#com.toxicbakery.logging.KtorLogProvider/PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-seedling/-ktor-log-seedling.html
+$dokka.location:com.toxicbakery.logging/KtorLogSeedling/log/#kotlin.Int#kotlin.String#kotlin.String#kotlin.Throwable?#kotlin.Array[kotlin.Any?]?/PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-seedling/log.html
+$dokka.location:com.toxicbakery.logging/KtorLogSeedling/tag/#/PointingToDeclaration/arbor-ktor/com.toxicbakery.logging/-ktor-log-seedling/tag.html
+com.toxicbakery.logging

@@ -1,0 +1,69 @@
+version: 2.1
+orbs:
+  android: circleci/android@3.2.0
+jobs:
+  build:
+    executor:
+      name: android/android_machine
+      resource_class: large
+      tag: default
+    steps:
+      - checkout
+      - android/restore_gradle_cache
+      - restore_cache:
+          name: Restore Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
+      - run:
+          name: Execute Gradle
+          command: |
+            ./ci.sh
+      - android/save_gradle_cache
+      - save_cache:
+          name: Save Konan
+          key: konan-{{ arch }}-{{ checksum "/tmp/gradle_cache_seed" }}
+          paths:
+            - ~/.konan
+  ios-test:
+    macos:
+      xcode: 26.4.0
+    # macOS minutes bill at a premium; m4pro.medium is the smallest current Apple silicon class. Adjust the Xcode
+    # version and resource_class to whatever your CircleCI plan offers.
+    resource_class: m4pro.medium
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Konan and Gradle caches
+          keys:
+            - konan-gradle-{{ arch }}-{{ checksum "gradle/libs.versions.toml" }}
+      - run:
+          # Apple silicon runner, so exercise the arm64 simulator target.
+          name: Run iOS simulator tests
+          command: ./gradlew iosSimulatorArm64Test --no-daemon
+      - save_cache:
+          name: Save Konan and Gradle caches
+          key: konan-gradle-{{ arch }}-{{ checksum "gradle/libs.versions.toml" }}
+          paths:
+            - ~/.konan
+            - ~/.gradle/caches
+workflows:
+  build:
+    jobs:
+      - ios-test:
+          # Gates the build/publish job below; must share its tag filter so releases are scheduled on tags.
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore:
+                - gh-pages
+      - build:
+          context: Sonatype
+          # Block build and publish until the iOS simulator tests pass.
+          requires:
+            - ios-test
+          filters:
+            tags:
+              only: /.*/
+            branches:
+              ignore:
+                - gh-pages
